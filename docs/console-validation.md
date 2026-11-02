@@ -96,3 +96,17 @@ Same console and Home Assistant.
   starting from the autoloader at the next boot, and a notification over a running game (the PS5 shows system
   notifications over games by design; seen here over the home screen).
 
+
+### 2 November 2026, third run (the 1.0.0 release)
+
+Same console and Home Assistant.
+
+- **Worked:**
+  - The 1.0.0 build, in the media category, installed over the earlier one, registered and launched with its
+    saved settings (no `lamplight.conf`). As expected for a media title, Remote Play shows it black.
+  - The 1.0.0 `lamplight-notify.elf` replaced the running payload and the autoloader's copy. Its first status
+    event reached Home Assistant within seconds (SoC 44 °C, CPU 48 °C).
+  - A notification over a running game: `script.ps5_notify` showed over Tetris Effect: Connected's opening screen,
+    with Lamplight's icon.
+- **Not checked:** waking from rest mode and the payload starting at the next boot. Either one risks the
+  console's homebrew setup, which has to be restored by hand, so they wait for someone at the console.
