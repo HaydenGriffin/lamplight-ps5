@@ -1,0 +1,37 @@
+{
+  "host": "192.0.2.20",
+  "port": 8123,
+  "token": "REPLACE_WITH_A_HOME_ASSISTANT_LONG_LIVED_TOKEN",
+  "weather": "weather.home",
+  "calendars": [
+    {"entity": "calendar.family", "name": "Family", "icon": "mdi:home-heart"},
+    {"entity": "calendar.work", "name": "Work", "icon": "mdi:briefcase-outline"}
+  ],
+  "view_assist": "sensor.viewassist_living_room",
+  "quick_minutes": [5, 10, 15, 20],
+  "appliance_timers": [
+    {"entity": "timer.washing_machine", "name": "Washing machine", "icon": "mdi:washing-machine"}
+  ],
+  "wifi": {"ssid": "Guest network", "password": "", "security": "WPA"},
+  "agent_id": "conversation.home_assistant",
+  "wake_phrase": "Okay Nabu",
+  "room": "living room",
+  "read_only_entity": "",
+  "room_page": {
+    "name": "Living room",
+    "icon": "mdi:sofa-outline",
+    "media": "media_player.living_room_speaker",
+    "tiles": [
+      {"entity": "light.living_room", "name": "Main lights", "icon": "mdi:ceiling-light"},
+      {"entity": "light.floor_lamp", "name": "Floor lamp", "icon": "mdi:floor-lamp"},
+      {"entity": "climate.living_room", "name": "Radiator"}
+    ],
+    "actions": [
+      {"entity": "script.movie_time", "name": "Movie time", "icon": "mdi:movie-open-outline"},
+      {"entity": "script.lights_off", "name": "Lights off", "icon": "mdi:lightbulb-off-outline"},
+      {"entity": "script.good_night", "name": "Good night", "icon": "mdi:power-sleep", "confirm": true}
+    ]
+  },
+  "reduced_motion": false,
+  "vibration": false
+}

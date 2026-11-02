@@ -1,0 +1,32 @@
+name: PS5
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the Linux toolchain image
+        run: docker build -t lamplight-builder .
+      - name: Lint and host tests
+        run: docker run --rm -v "$PWD:/work" lamplight-builder make lint test
+      - name: Render native previews
+        run: docker run --rm -v "$PWD:/work" lamplight-builder make preview
+      - name: Build the PS5 title
+        run: docker run --rm -v "$PWD:/work" lamplight-builder make app
+      - name: Build the notification payload
+        run: docker run --rm -v "$PWD:/work" lamplight-builder make payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lamplight-ps5
+          path: |
+            dist/PPSA99484.zip
+            dist/SHA256SUMS
+            dist/lamplight-notify.elf
+            build/preview/*.png
+          if-no-files-found: error

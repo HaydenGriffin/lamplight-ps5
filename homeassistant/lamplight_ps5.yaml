@@ -1,0 +1,62 @@
+# Lamplight for PS5 in Home Assistant: a package (put it in <config>/packages/ with `homeassistant: packages:` set up,
+# then reload templates and scripts). Lamplight's payload on the PS5 (README, "Notifications on the PS5") sends the
+# event lamplight_ps5_status once a minute and shows lamplight_ps5_notify as a PS5 notification.
+#
+#   action: script.ps5_notify
+#   data: {title: Washing machine finished, message: Laundry}
+#
+# The payload's token must be an administrator's: Home Assistant lets only administrators subscribe to an event of
+# their own (the notifications) and fire one (the status).
+
+template:
+- trigger:
+  - trigger: event
+    event_type: lamplight_ps5_status
+  binary_sensor:
+  - name: PS5 Lamplight
+    unique_id: ps5_lamplight
+    device_class: connectivity
+    state: "true"
+    auto_off: "00:03:00"          # off three minutes after the last report: rest mode, off, or the payload stopped
+  sensor:
+  - name: PS5 SoC temperature
+    unique_id: ps5_soc_temperature
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    state: "{{ trigger.event.data.soc_temperature | default(none) }}"
+  - name: PS5 CPU temperature
+    unique_id: ps5_cpu_temperature
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    state: "{{ trigger.event.data.cpu_temperature | default(none) }}"
+  - name: PS5 free space
+    unique_id: ps5_free_space
+    device_class: data_size
+    state_class: measurement
+    unit_of_measurement: GB
+    state: "{{ trigger.event.data.free_gb | default(none) }}"
+  - name: PS5 up since
+    unique_id: ps5_up_since
+    device_class: timestamp
+    state: >-
+      {% set up = trigger.event.data.uptime_s | int(-1) %}{{ (now() - timedelta(seconds=up)).replace(second=0,
+      microsecond=0).isoformat() if up >= 0 else none }}
+
+script:
+  ps5_notify:
+    alias: PS5 — notification
+    mode: queued
+    max: 6
+    fields:
+      title: {required: true, selector: {text: null}}
+      message: {selector: {text: null}}
+    sequence:
+      - condition: state
+        entity_id: binary_sensor.ps5_lamplight
+        state: "on"
+      - event: lamplight_ps5_notify
+        event_data:
+          title: "{{ title }}"
+          message: "{{ message | default('') }}"

@@ -1,0 +1,580 @@
+{
+ "now": "2026-11-02T14:05:00+00:00",
+ "offset": 0,
+ "config": {
+  "host": "127.0.0.1",
+  "port": 8123,
+  "token": "fixture-token",
+  "weather": "weather.home",
+  "calendars": [
+   {
+    "entity": "calendar.family",
+    "name": "Family",
+    "icon": "mdi:home-heart"
+   },
+   {
+    "entity": "calendar.work",
+    "name": "Work",
+    "icon": "mdi:briefcase-outline"
+   }
+  ],
+  "view_assist": "sensor.viewassist_living_room",
+  "quick_minutes": [
+   5,
+   10,
+   15,
+   20
+  ],
+  "appliance_timers": [
+   {
+    "entity": "timer.washing_machine",
+    "name": "Washing machine",
+    "icon": "mdi:washing-machine"
+   }
+  ],
+  "wifi": {
+   "ssid": "Griffin guests",
+   "password": "correct horse battery",
+   "security": "WPA"
+  },
+  "agent_id": "conversation.home_assistant",
+  "wake_phrase": "Okay Nabu",
+  "room": "living room",
+  "read_only_entity": "input_boolean.visitors",
+  "room_page": {
+   "name": "Living room",
+   "icon": "mdi:sofa-outline",
+   "media": "media_player.living_room_speaker",
+   "tiles": [
+    {
+     "entity": "light.living_room",
+     "name": "Main lights",
+     "icon": "mdi:ceiling-light"
+    },
+    {
+     "entity": "light.living_room_lamp",
+     "name": "Floor lamp",
+     "icon": "mdi:floor-lamp"
+    },
+    {
+     "entity": "light.fireplace",
+     "name": "Fireplace",
+     "icon": "mdi:fireplace"
+    },
+    {
+     "entity": "climate.living_room",
+     "name": "Radiator"
+    },
+    {
+     "entity": "cover.living_room_blinds",
+     "name": "Blinds"
+    },
+    {
+     "entity": "switch.air_purifier",
+     "name": "Air purifier",
+     "icon": "mdi:fan"
+    }
+   ],
+   "actions": [
+    {
+     "entity": "script.gaming_mode",
+     "name": "Gaming mode",
+     "icon": "mdi:gamepad-variant-outline"
+    },
+    {
+     "entity": "script.movie_time",
+     "name": "Movie time",
+     "icon": "mdi:movie-open-outline"
+    },
+    {
+     "entity": "script.lights_off",
+     "name": "Lights off",
+     "icon": "mdi:lightbulb-off-outline"
+    },
+    {
+     "entity": "script.good_night",
+     "name": "Good night",
+     "icon": "mdi:power-sleep",
+     "confirm": true
+    }
+   ]
+  }
+ },
+ "states": {
+  "a": {
+   "weather.home": {
+    "s": "partlycloudy",
+    "a": {
+     "friendly_name": "Home",
+     "temperature": 12.4,
+     "humidity": 71,
+     "wind_speed": 18.4,
+     "wind_bearing": 225,
+     "wind_speed_unit": "km/h",
+     "uv_index": 1
+    }
+   },
+   "sun.sun": {
+    "s": "above_horizon",
+    "a": {
+     "next_rising": "2026-11-03T07:02:00+00:00",
+     "next_setting": "2026-11-02T16:29:00+00:00"
+    }
+   },
+   "calendar.family": {
+    "s": "on",
+    "a": {
+     "friendly_name": "Family",
+     "message": "Dentist"
+    }
+   },
+   "calendar.work": {
+    "s": "off",
+    "a": {
+     "friendly_name": "Work"
+    }
+   },
+   "sensor.viewassist_living_room": {
+    "s": "idle",
+    "a": {
+     "friendly_name": "Living room",
+     "mode": "normal",
+     "title": "Weather",
+     "message": "It's 12 degrees and partly cloudy. Rain is likely from about five this evening, heaviest around seven, and it should clear before midnight.",
+     "timers": [
+      {
+       "id": "pasta-1",
+       "name": "pasta",
+       "timer_class": "timer",
+       "status": "running",
+       "created_at": "2026-11-02T14:00:00+00:00",
+       "expires": "2026-11-02T14:17:21+00:00",
+       "original_expiry": "2026-11-02T14:17:21+00:00"
+      },
+      {
+       "id": "tea-2",
+       "name": "",
+       "timer_class": "timer",
+       "status": "paused",
+       "created_at": "2026-11-02T13:50:00+00:00",
+       "expires": "2026-11-02T14:02:00+00:00",
+       "updated_at": "2026-11-02T13:57:00+00:00",
+       "remaining": 300
+      },
+      {
+       "id": "alarm-3",
+       "name": "",
+       "timer_class": "alarm",
+       "status": "running",
+       "created_at": "2026-11-02T09:00:00+00:00",
+       "expires": "2026-11-03T07:00:00+00:00"
+      },
+      {
+       "id": "old-4",
+       "name": "eggs",
+       "timer_class": "timer",
+       "status": "expired",
+       "created_at": "2026-11-02T12:00:00+00:00",
+       "expires": "2026-11-02T12:06:00+00:00"
+      }
+     ]
+    }
+   },
+   "timer.washing_machine": {
+    "s": "active",
+    "a": {
+     "friendly_name": "Washing machine",
+     "finishes_at": "2026-11-02T15:10:00+00:00"
+    }
+   },
+   "input_boolean.visitors": {
+    "s": "off",
+    "a": {
+     "friendly_name": "Visitors"
+    }
+   },
+   "light.living_room": {
+    "s": "on",
+    "a": {
+     "friendly_name": "Living room",
+     "brightness": 140
+    }
+   },
+   "light.living_room_lamp": {
+    "s": "off",
+    "a": {
+     "friendly_name": "Floor lamp"
+    }
+   },
+   "light.fireplace": {
+    "s": "on",
+    "a": {
+     "friendly_name": "Fireplace",
+     "brightness": 255
+    }
+   },
+   "climate.living_room": {
+    "s": "heat",
+    "a": {
+     "friendly_name": "Living room",
+     "current_temperature": 20.5,
+     "hvac_action": "heating"
+    }
+   },
+   "cover.living_room_blinds": {
+    "s": "closed",
+    "a": {
+     "friendly_name": "Blinds"
+    }
+   },
+   "switch.air_purifier": {
+    "s": "off",
+    "a": {
+     "friendly_name": "Air purifier"
+    }
+   },
+   "media_player.living_room_speaker": {
+    "s": "playing",
+    "a": {
+     "friendly_name": "Living room speaker",
+     "media_title": "Harvest Moon",
+     "media_artist": "Neil Young",
+     "volume_level": 0.32
+    }
+   },
+   "script.gaming_mode": {
+    "s": "off",
+    "a": {
+     "friendly_name": "Gaming mode"
+    }
+   },
+   "script.movie_time": {
+    "s": "off",
+    "a": {
+     "friendly_name": "Movie time"
+    }
+   },
+   "script.lights_off": {
+    "s": "off",
+    "a": {
+     "friendly_name": "Lights off"
+    }
+   },
+   "script.good_night": {
+    "s": "off",
+    "a": {
+     "friendly_name": "Good night"
+    }
+   }
+  }
+ },
+ "catalog": [
+  {
+   "entity_id": "weather.home",
+   "state": "partlycloudy",
+   "attributes": {
+    "friendly_name": "Home"
+   }
+  },
+  {
+   "entity_id": "weather.met_office_london",
+   "state": "rainy",
+   "attributes": {
+    "friendly_name": "Met Office London"
+   }
+  },
+  {
+   "entity_id": "calendar.family",
+   "state": "on",
+   "attributes": {
+    "friendly_name": "Family"
+   }
+  },
+  {
+   "entity_id": "calendar.work",
+   "state": "off",
+   "attributes": {
+    "friendly_name": "Work"
+   }
+  },
+  {
+   "entity_id": "calendar.uk_holidays",
+   "state": "off",
+   "attributes": {
+    "friendly_name": "UK holidays"
+   }
+  },
+  {
+   "entity_id": "sensor.viewassist_living_room",
+   "state": "idle",
+   "attributes": {
+    "friendly_name": "Living room",
+    "timers": []
+   }
+  },
+  {
+   "entity_id": "sensor.viewassist_kitchen",
+   "state": "idle",
+   "attributes": {
+    "friendly_name": "Kitchen",
+    "timers": []
+   }
+  },
+  {
+   "entity_id": "sensor.outdoor_temperature",
+   "state": "12.4",
+   "attributes": {
+    "friendly_name": "Outdoor temperature"
+   }
+  },
+  {
+   "entity_id": "timer.washing_machine",
+   "state": "active",
+   "attributes": {
+    "friendly_name": "Washing machine"
+   }
+  },
+  {
+   "entity_id": "timer.dryer",
+   "state": "idle",
+   "attributes": {
+    "friendly_name": "Dryer"
+   }
+  },
+  {
+   "entity_id": "conversation.home_assistant",
+   "state": "unknown",
+   "attributes": {
+    "friendly_name": "Home Assistant"
+   }
+  },
+  {
+   "entity_id": "input_boolean.visitors",
+   "state": "off",
+   "attributes": {
+    "friendly_name": "Visitors"
+   }
+  },
+  {
+   "entity_id": "light.living_room",
+   "state": "on",
+   "attributes": {
+    "friendly_name": "Living room lights"
+   }
+  }
+ ],
+ "forecasts": {
+  "hourly": {
+   "weather.home": {
+    "forecast": [
+     {
+      "datetime": "2026-11-02T14:00:00+00:00",
+      "condition": "partlycloudy",
+      "temperature": 12.4,
+      "precipitation": 0
+     },
+     {
+      "datetime": "2026-11-02T15:00:00+00:00",
+      "condition": "partlycloudy",
+      "temperature": 12.8,
+      "precipitation": 0
+     },
+     {
+      "datetime": "2026-11-02T16:00:00+00:00",
+      "condition": "cloudy",
+      "temperature": 12.1,
+      "precipitation": 0
+     },
+     {
+      "datetime": "2026-11-02T17:00:00+00:00",
+      "condition": "rainy",
+      "temperature": 11.2,
+      "precipitation": 0.4
+     },
+     {
+      "datetime": "2026-11-02T18:00:00+00:00",
+      "condition": "rainy",
+      "temperature": 10.6,
+      "precipitation": 1.2
+     },
+     {
+      "datetime": "2026-11-02T19:00:00+00:00",
+      "condition": "pouring",
+      "temperature": 10.1,
+      "precipitation": 2.6
+     },
+     {
+      "datetime": "2026-11-02T20:00:00+00:00",
+      "condition": "rainy",
+      "temperature": 9.6,
+      "precipitation": 0.8
+     },
+     {
+      "datetime": "2026-11-02T21:00:00+00:00",
+      "condition": "cloudy",
+      "temperature": 9.0,
+      "precipitation": 0.1
+     },
+     {
+      "datetime": "2026-11-02T22:00:00+00:00",
+      "condition": "cloudy",
+      "temperature": 8.4,
+      "precipitation": 0
+     },
+     {
+      "datetime": "2026-11-02T23:00:00+00:00",
+      "condition": "clear-night",
+      "temperature": 7.9,
+      "precipitation": 0
+     },
+     {
+      "datetime": "2026-11-03T00:00:00+00:00",
+      "condition": "clear-night",
+      "temperature": 7.5,
+      "precipitation": 0
+     },
+     {
+      "datetime": "2026-11-03T01:00:00+00:00",
+      "condition": "clear-night",
+      "temperature": 7.2,
+      "precipitation": 0
+     },
+     {
+      "datetime": "2026-11-03T02:00:00+00:00",
+      "condition": "clear-night",
+      "temperature": 7.0,
+      "precipitation": 0
+     },
+     {
+      "datetime": "2026-11-03T03:00:00+00:00",
+      "condition": "partlycloudy",
+      "temperature": 6.8,
+      "precipitation": 0
+     }
+    ]
+   }
+  },
+  "daily": {
+   "weather.home": {
+    "forecast": [
+     {
+      "datetime": "2026-11-02T00:00:00+00:00",
+      "condition": "rainy",
+      "temperature": 13.2,
+      "templow": 6.4,
+      "precipitation": 4.6
+     },
+     {
+      "datetime": "2026-11-03T00:00:00+00:00",
+      "condition": "partlycloudy",
+      "temperature": 11.6,
+      "templow": 4.2,
+      "precipitation": 0
+     },
+     {
+      "datetime": "2026-11-04T00:00:00+00:00",
+      "condition": "sunny",
+      "temperature": 10.4,
+      "templow": 2.1,
+      "precipitation": 0
+     },
+     {
+      "datetime": "2026-11-05T00:00:00+00:00",
+      "condition": "rainy",
+      "temperature": 12.0,
+      "templow": 7.3,
+      "precipitation": 8.2
+     },
+     {
+      "datetime": "2026-11-06T00:00:00+00:00",
+      "condition": "cloudy",
+      "temperature": 11.1,
+      "templow": 6.0,
+      "precipitation": 0.3
+     },
+     {
+      "datetime": "2026-11-07T00:00:00+00:00",
+      "condition": "windy",
+      "temperature": 9.8,
+      "templow": 5.5,
+      "precipitation": 1.1
+     }
+    ]
+   }
+  }
+ },
+ "events": {
+  "calendar.family": {
+   "calendar.family": {
+    "events": [
+     {
+      "start": "2026-11-02",
+      "end": "2026-11-03",
+      "summary": "Bin day"
+     },
+     {
+      "start": "2026-11-02T08:30:00+00:00",
+      "end": "2026-11-02T09:00:00+00:00",
+      "summary": "School run"
+     },
+     {
+      "start": "2026-11-02T13:30:00+00:00",
+      "end": "2026-11-02T15:00:00+00:00",
+      "summary": "Dentist",
+      "location": "Smile Dental, 14 Station Road, Bristol"
+     },
+     {
+      "start": "2026-11-02T16:00:00+00:00",
+      "end": "2026-11-02T17:00:00+00:00",
+      "summary": "Cancelled: Swimming lesson"
+     },
+     {
+      "start": "2026-11-02T18:30:00+00:00",
+      "end": "2026-11-02T21:00:00+00:00",
+      "summary": "Dinner with Sam and Priya at the new place on the harbour",
+      "location": "The Old Bell, High Street"
+     },
+     {
+      "start": "2026-11-03",
+      "end": "2026-11-04",
+      "summary": "Mum's birthday"
+     },
+     {
+      "start": "2026-11-03T07:30:00+00:00",
+      "end": "2026-11-03T08:30:00+00:00",
+      "summary": "Gym"
+     }
+    ]
+   }
+  },
+  "calendar.work": {
+   "calendar.work": {
+    "events": [
+     {
+      "start": "2026-11-02T10:00:00+00:00",
+      "end": "2026-11-02T11:00:00+00:00",
+      "summary": "Stand-up",
+      "location": "Microsoft Teams Meeting"
+     },
+     {
+      "start": "2026-11-03T10:00:00+00:00",
+      "end": "2026-11-03T11:30:00+00:00",
+      "summary": "Project review",
+      "location": "https://zoom.us/j/123"
+     }
+    ]
+   }
+  }
+ },
+ "reply": {
+  "response": {
+   "speech": {
+    "plain": {
+     "speech": "Turned on the lights in the living room."
+    }
+   },
+   "response_type": "action_done"
+  },
+  "conversation_id": "01JFIXTURE"
+ }
+}
