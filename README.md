@@ -19,9 +19,8 @@ any game, the game being played, the console's temperatures, and commands to ope
 > sheets and sliders, scenes, charts, warm-ups, House controls, Speakers, the slideshow and photo backgrounds, with
 > memory steady over a 16-minute slideshow. Not yet run for real: Everything off, Good night, Away, Night mode, Play
 > everywhere and Move here, and the rest command since its fix. [Console validation](docs/console-validation.md) has
-> the detail. 1.1 is on `main` and not in a release yet, so build it (below) to get it. The tour and pictures below are
-> drawn by Lamplight's own UI code from a made-up house; the notification in the one above was captured from the
-> console.
+> the detail. 1.1.0 is the latest release. The tour and pictures below are drawn by Lamplight's own UI code from a
+> made-up house; the notification in the one above was captured from the console.
 
 <p align="center">
   <img src="docs/images/tour.gif" alt="A tour of Lamplight, a button press at a time: the clock, the Living room, a light's sheet with its sliders and scenes, a radiator's chart, Now Playing and Speakers, the notices, Weather, Agenda and Timers, House controls, the doorbell's camera, the slideshow, a question to the assistant, and the resting clock under a night sky" width="100%">
