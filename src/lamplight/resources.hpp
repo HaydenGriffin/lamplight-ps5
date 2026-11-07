@@ -12,13 +12,32 @@
 
 namespace lamplight
 {
+// A picture's URL ending in this also gets a small blurred copy, for behind a page (DESIGN.md's
+// Pre-blur: blurred once, then simply scaled up). The fragment never goes to the server.
+inline constexpr const char *kSoftPicture = "#soft";
 struct Picture
 {
     std::string url;
     bool ok = false;
     int width = 0, height = 0;
     std::vector<std::uint8_t> rgba;
+    int soft_width = 0, soft_height = 0;
+    std::vector<std::uint8_t> soft;
+    float brightness = 0.5f; // how bright it is overall, 0 to 1
 };
+// How bright a picture is overall, 0 (black) to 1 (white).
+float mean_brightness(const std::vector<std::uint8_t> &rgba);
+// The EXIF orientation of a JPEG (1 to 8; 1 for upright, or when it doesn't say). Phones store a
+// portrait photo sideways and say so here.
+int jpeg_orientation(const std::vector<std::uint8_t> &bytes);
+// RGBA pixels turned the way the orientation says, so they read upright.
+void apply_orientation(std::vector<std::uint8_t> &rgba, int &width, int &height, int orientation);
+// RGBA pixels averaged down to a smaller size (each no larger than the source's).
+std::vector<std::uint8_t> shrunk(const std::vector<std::uint8_t> &rgba, int width, int height,
+                                 int to_width, int to_height);
+// A small, heavily blurred copy.
+void soften(const std::vector<std::uint8_t> &rgba, int width, int height,
+            std::vector<std::uint8_t> &soft, int &soft_width, int &soft_height);
 class Resources
 {
   public:

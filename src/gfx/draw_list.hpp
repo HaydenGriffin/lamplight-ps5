@@ -136,6 +136,8 @@ class DrawList
     void gradient_rect(const Rect &r, float radius, Color top, Color bottom);
     // Horizontal gradient (left to right).
     void gradient_rect_h(const Rect &r, float radius, Color left, Color right);
+    // Light spreading `reach` pixels from the top left corner, kept inside the rounded shape.
+    void corner_glow(const Rect &r, float radius, float reach, Color color);
     void bordered_rect(const Rect &r, float radius, Color fill, float border, Color border_color);
     // Rectangle whose corners are cut at 45 degrees by `cut` pixels (sci-fi
     // panels, tags). border > 0 adds an inner border like bordered_rect.

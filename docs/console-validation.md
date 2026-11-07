@@ -25,6 +25,27 @@ or launch without the owner's permission.
 - **Timers:** set a 5-minute timer from the page and see it appear on the View Assist device; cancel it, press
   Triangle within 8 seconds and see it come back; cancel an alarm (two presses).
 - **Wi-Fi:** scan the code with an iPhone and an Android phone from the sofa.
+- **Controls:** on a light's tile, tap Cross (it toggles, once) and hold Cross (the ring fills and the sheet opens,
+  no toggle). Slide brightness with the D-pad and the left stick and watch the lamp follow; set warmth, a colour and
+  an effect; move a group's single lamp; use the right stick from the page; the All lamps slider from an action.
+  Open a thermostat, blinds and a speaker's sheets and use each row. Close a sheet mid-slide and check the last value
+  lands. Unlock takes two presses.
+- **Scenes:** on a room's main light, each scene does what it says and the chosen one follows the lamp, including
+  when something else changes it. Cinema runs its script.
+- **Charts:** a thermostat's and a sensor's chart load in a moment, and their last point matches the reading now.
+  Leave one open for six minutes: it refreshes without a stutter.
+- **Warm-ups:** 21° for 2 hours starts the warm-up, in the house's own words; Stop ends it. A press with the radiator
+  offline says why.
+- **House controls:** L2 from every page. Everything off: first press only arms it; second runs it; Undo puts the
+  lamps back within 8 seconds. Turn each mode on and off, and see it on the tablets. Guests off asks twice. With the
+  visitors switch on, only that switch runs.
+- **Speakers:** Square on Now Playing. Play everywhere, then Only this room; Move here from another room; Pause and
+  the volume while together reach every room; a room joining and leaving; a sleep timer counting down and Off
+  cancelling it. Stop Music Assistant and check a move says it couldn't.
+- **Slideshow:** Triangle on the clock; check portrait and EXIF-rotated photos, step, pause, hide the clock, change
+  the time with L1 and R1, and choose a folder in Setup. Leave it an hour and watch the memory: nothing should grow.
+- **Backgrounds:** set each of Setup's Background choices and read every page from the sofa over them; a room's
+  `photo`; the cover behind Now Playing; a camera tile.
 - **What can I say?:** run an example; run one marked `confirm` (two presses); type a question with Triangle;
   turn the visitors switch on and check nothing runs.
 - **Assistant:** ask the View Assist device something and see the answer (and its picture, if it has one at an
@@ -110,3 +131,51 @@ Same console and Home Assistant.
     with Lamplight's icon.
 - **Not checked:** waking from rest mode and the payload starting at the next boot. Either one risks the
   console's homebrew setup, which has to be restored by hand, so they wait for someone at the console.
+
+### 6 November 2026, the 1.1.0 run (controls, scenes, charts, House controls, Speakers, photos)
+
+Same console (7.20, jailbreak still in place after rest mode), Home Assistant and PS5Upload 10.7.2. Title as a game.
+The new settings came from a test `lamplight.conf` (Home Assistant's settings entity switched off for the run, the
+tablets' entities, and one extra action, Fireplace off, to try Undo safely); afterwards the saved settings were put
+back as they were and the file deleted. People were home and the office speaker was playing, so Everything off, Good
+night, Away, Night mode, Play everywhere and Move here were not run for real. Final package SHA-256
+`f0c1c0fd97f262eca59ba055da904a6e641f0a50975aee100836d3501eb2f034`.
+
+- **Worked:**
+  - L2 opens House controls on every page tried (the clock, each room, Now Playing, House, Weather, Agenda, Timers,
+    Wi-Fi, Help, Assistant) and closes it again; not on the close screen.
+  - Cinema on and off from House controls and from the scene row (the house's script dimmed the lit lamps to 10% and
+    put them back). Guests on; with it on, Cinema refused with "Visitors mode is on"; Guests off took two presses.
+  - Everything off: the first press only armed it, Circle within 5 s cancelled just that, and nothing ran. Fireplace
+    off ran on the second press and Undo brought the lamp back in 2 s ("Lights back as they were").
+  - Relax, Bright and Off in Main lights' sheet, each read back in Home Assistant (45% at 2700 K, 100% at 4000 K, off),
+    the chosen one lit. Brightness by D-pad (5% a step) and by left stick; the right stick from the page; hold Cross
+    0.9 s opened the sheet without toggling; a tap toggled once.
+  - The radiator's chart (from the room sensor) and the kitchen temperature's loaded in about a second, last points
+    matching the readings. 21° for 2 hours and Stop ran the house's script and showed its own words.
+  - Speakers on Square and from the speaker sheet: the office's music listed under Playing elsewhere; a 15-minute
+    sleep timer on the kitchen started and Off cancelled it; volume; the bedroom leaving and rejoining Everywhere.
+  - The folder chooser over Home Assistant's media; the slideshow (portrait photos over their blur, step, pause,
+    hide the clock, L1 and R1 down to 10 s); Background: Photos behind the clock and the pages.
+  - Memory over a 16-minute slideshow at 10 s a photo (two laps of 46 phone photos): 577 to 585 MiB, no growth.
+- **Found and fixed** (fixed build deployed and each checked again on the console):
+  - A room with five actions put the fifth under the button hints (since 1.0.0).
+  - Toasts over a sheet covered its title; a script's reply was gone in 2.5 s.
+  - Sliders snapped what a thing reports to their step (75% beside the page's 73%).
+  - Sensors read "16.53 °C" and "75.02%"; the kitchen's icon wasn't in the font (12 house icons added).
+  - The Speakers sheet opened on Move here; its sleep timer didn't say whose it was, or show the running choice.
+  - Chart hours read 17:38, 23:38...; All lamps counted Main lights and its own two lamps as three.
+- **Seen, not changed:**
+  - The house's warm-up sets the radiator head to 25° (its plan's way to reach 21°), so the sheet then says Set 25°.
+  - The radiator's header reads the head (18°) while its chart reads the room sensor (19.6°).
+  - With the lamps off but Cinema mode on, the scene row keeps Cinema lit (the tablets' order: a mode first).
+  - A Next pressed while the next photo was still loading was dropped.
+  - The Remote Play stream dropped once ("nothing for 15 s") just after Background: Photos; Lamplight carried on.
+  - `script.ps5_rest` didn't put the console to rest within 90 s; the house's rest button did.
+- **Changed since, and not yet run on the console:** a thermostat with `boosts` reads its room `sensor` and has no
+  target of its own; the scene row's Off beats a mode; a photo step during a load waits its turn; `script.ps5_rest`
+  looks for the standby call in `libSceSystemService`, where the payload SDK has it; and the fixes from a review of the
+  whole of 1.1.0, listed in the [changelog](../CHANGELOG.md).
+- **Not checked:** Everything off, Good night, Away and Night mode for real; Play everywhere and Move here; a move
+  failing; a chart refreshing after five minutes; connection loss; a session over an hour; typing; the sofa;
+  `script.ps5_rest` with the new lookup.

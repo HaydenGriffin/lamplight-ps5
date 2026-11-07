@@ -58,23 +58,29 @@ std::string Application::timers_subtitle() const
         else if (!running++)
             next = t.at;
     }
+    const auto running_apps = appliance_timers(config_.appliances, snapshot_.states, clock_.zone);
     if (running)
-        return std::to_string(running) + " running \xC2\xB7 next done at " +
-               hhmm(next, clock_.zone);
+    {
+        // Every countdown on the page counts, the appliances' too.
+        for (const auto &a : running_apps)
+            next = std::min(next, a.at);
+        return std::to_string(running + static_cast<int>(running_apps.size())) +
+               " running \xC2\xB7 next done at " + hhmm(next, clock_.zone);
+    }
     if (paused)
         return std::to_string(paused) + " paused";
     if (alarms)
         return std::to_string(alarms) + (alarms > 1 ? " alarms set" : " alarm set");
-    const auto apps = appliance_timers(config_.appliances, snapshot_.states, clock_.zone);
-    if (!apps.empty())
+    if (!running_apps.empty())
     {
-        const auto &a = apps.front();
+        const auto &a = running_apps.front();
         const auto name = a.choice.name.empty()
                               ? snapshot_.states.get(a.choice.entity).name(a.choice.entity)
                               : a.choice.name;
         return name + " done at " + hhmm(a.at, clock_.zone) +
-               (apps.size() > 1 ? " \xC2\xB7 " + std::to_string(apps.size()) + " appliances running"
-                                : "");
+               (running_apps.size() > 1
+                    ? " \xC2\xB7 " + std::to_string(running_apps.size()) + " appliances running"
+                    : "");
     }
     if (config_.view_assist.empty())
         return "Choose a View Assist device in Setup to set timers here";
@@ -170,9 +176,9 @@ void Application::draw_timers(Paint &p) const
         }
         p.text(label, row.x + 140, row.y + 108, size::label, tone::muted, false, Align::left,
                row.w - 450);
-        const float pw = armed ? 400 : 210;
-        p.pill({row.x + row.w - pw - 22, row.cy() - size::target / 2, pw, size::target}, "close",
-               armed ? "Press again to cancel" : "Cancel",
+        const float pw = 280;
+        p.pill({row.x + row.w - pw - 22, row.cy() - size::target / 2, pw, size::target},
+               armed ? "" : "close", armed ? "Confirm cancel" : "Cancel",
                armed ? PillKind::danger : PillKind::rest, focused, false, true);
     }
     // Start a timer: big minute buttons.

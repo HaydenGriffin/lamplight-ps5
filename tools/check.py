@@ -12,7 +12,8 @@ import sys
 
 root = Path(__file__).resolve().parents[1]
 owned = sorted((root / 'src/lamplight').glob('*.[ch]pp'))
-owned += [root / 'src/main.cpp', root / 'host/preview.cpp', root / 'host/fixture_home.hpp',
+owned += [root / 'src/main.cpp', root / 'host/preview.cpp', root / 'host/tour.cpp',
+          root / 'host/offscreen.hpp', root / 'host/fixture_home.hpp',
           root / 'tests/tests.cpp']
 subprocess.run(['clang-format-18', '--dry-run', '--Werror', *map(str, owned)], check=True)
 for path in owned + [root / 'tools/make-fonts.py', root / 'tools/check.py', root / 'tests/integration.py']:

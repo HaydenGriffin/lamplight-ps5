@@ -61,8 +61,13 @@ std::vector<Hour> next_hours(const std::vector<Hour> &hours, std::int64_t now_ms
             out.push_back(h);
     return out;
 }
-const char *condition_icon(const std::string &c)
+const char *condition_icon(const std::string &c, bool night)
 {
+    // Integrations say "partlycloudy" and "sunny" after dark too.
+    if (night && c == "partlycloudy")
+        return "weather-night-partly-cloudy";
+    if (night && c == "sunny")
+        return "weather-night";
     static const std::map<std::string, const char *> icons{
         {"clear-night", "weather-night"},
         {"cloudy", "weather-cloudy"},

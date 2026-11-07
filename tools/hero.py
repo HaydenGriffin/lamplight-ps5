@@ -51,12 +51,12 @@ def main():
     d.text((356, 392), "for PS5", font=font("atkinson_regular.ttf", 54), fill=MUTED)
     d.multiline_text((160, 520), "Your house's evening light,\non the TV.", font=font("atkinson_semibold.ttf", 76),
                      fill=TEXT, spacing=14)
-    d.multiline_text((160, 720), "The clock, the weather, the agenda, timers and\nyour living room, from Home Assistant, with\n"
-                     "the DualSense. Its notifications show over games.", font=font("atkinson_regular.ttf", 46),
+    d.multiline_text((160, 720), "Your rooms, music, the weather, the agenda and\nyour photos, from Home Assistant. Sliders for\n"
+                     "every light, and hold R2 to ask the assistant.", font=font("atkinson_regular.ttf", 46),
                      fill=MUTED, spacing=16)
-    # Two insets: the room page, and a notification as the console showed it.
-    d.text((164, 1012), "Living room", font=font("atkinson_semibold.ttf", 40), fill=MUTED)
-    room = Image.open(ROOT / "build/preview/room.png").convert("RGBA").resize((800, 450), Image.LANCZOS)
+    # Two insets: a light's controls, and a notification as the console showed it.
+    d.text((164, 1012), "A light's controls", font=font("atkinson_semibold.ttf", 40), fill=MUTED)
+    room = Image.open(ROOT / "build/preview/sheet-light.png").convert("RGBA").resize((800, 450), Image.LANCZOS)
     shadow(hero, (160, 1070, 960, 1520), 28)
     hero.alpha_composite(rounded(room, 28), (160, 1070))
     d.text((1030, 1012), "Over any game", font=font("atkinson_semibold.ttf", 40), fill=MUTED)
@@ -75,10 +75,10 @@ def main():
                                                                           Image.LANCZOS)
     hero.alpha_composite(rounded(screen, 16), (tv[0] + 18, tv[1] + 18))
     d.rounded_rectangle((2470, 870, 2660, 884), 6, fill=(36, 39, 45))
-    d.text((2050, 930), "Weather", font=font("atkinson_semibold.ttf", 40), fill=MUTED)
-    weather = Image.open(ROOT / "build/preview/weather.png").convert("RGBA").resize((1030, 579), Image.LANCZOS)
+    d.text((2050, 930), "Living room", font=font("atkinson_semibold.ttf", 40), fill=MUTED)
+    page = Image.open(ROOT / "build/preview/room.png").convert("RGBA").resize((1030, 579), Image.LANCZOS)
     shadow(hero, (2050, 990, 3080, 1569), 28)
-    hero.alpha_composite(rounded(weather, 28), (2050, 990))
+    hero.alpha_composite(rounded(page, 28), (2050, 990))
     out = ROOT / "docs/images/hero.png"
     hero.convert("RGB").save(out, optimize=True)
     print(out, hero.size)

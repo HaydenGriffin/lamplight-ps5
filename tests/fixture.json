@@ -1,580 +1,2593 @@
 {
- "now": "2026-11-02T14:05:00+00:00",
- "offset": 0,
- "config": {
-  "host": "127.0.0.1",
-  "port": 8123,
-  "token": "fixture-token",
-  "weather": "weather.home",
-  "calendars": [
-   {
-    "entity": "calendar.family",
-    "name": "Family",
-    "icon": "mdi:home-heart"
-   },
-   {
-    "entity": "calendar.work",
-    "name": "Work",
-    "icon": "mdi:briefcase-outline"
-   }
-  ],
-  "view_assist": "sensor.viewassist_living_room",
-  "quick_minutes": [
-   5,
-   10,
-   15,
-   20
-  ],
-  "appliance_timers": [
-   {
-    "entity": "timer.washing_machine",
-    "name": "Washing machine",
-    "icon": "mdi:washing-machine"
-   }
-  ],
-  "wifi": {
-   "ssid": "Griffin guests",
-   "password": "correct horse battery",
-   "security": "WPA"
-  },
-  "agent_id": "conversation.home_assistant",
-  "wake_phrase": "Okay Nabu",
-  "room": "living room",
-  "read_only_entity": "input_boolean.visitors",
-  "room_page": {
-   "name": "Living room",
-   "icon": "mdi:sofa-outline",
-   "media": "media_player.living_room_speaker",
-   "tiles": [
-    {
-     "entity": "light.living_room",
-     "name": "Main lights",
-     "icon": "mdi:ceiling-light"
-    },
-    {
-     "entity": "light.living_room_lamp",
-     "name": "Floor lamp",
-     "icon": "mdi:floor-lamp"
-    },
-    {
-     "entity": "light.fireplace",
-     "name": "Fireplace",
-     "icon": "mdi:fireplace"
-    },
-    {
-     "entity": "climate.living_room",
-     "name": "Radiator"
-    },
-    {
-     "entity": "cover.living_room_blinds",
-     "name": "Blinds"
-    },
-    {
-     "entity": "switch.air_purifier",
-     "name": "Air purifier",
-     "icon": "mdi:fan"
-    }
-   ],
-   "actions": [
-    {
-     "entity": "script.gaming_mode",
-     "name": "Gaming mode",
-     "icon": "mdi:gamepad-variant-outline"
-    },
-    {
-     "entity": "script.movie_time",
-     "name": "Movie time",
-     "icon": "mdi:movie-open-outline"
-    },
-    {
-     "entity": "script.lights_off",
-     "name": "Lights off",
-     "icon": "mdi:lightbulb-off-outline"
-    },
-    {
-     "entity": "script.good_night",
-     "name": "Good night",
-     "icon": "mdi:power-sleep",
-     "confirm": true
-    }
-   ]
-  }
- },
- "states": {
-  "a": {
-   "weather.home": {
-    "s": "partlycloudy",
-    "a": {
-     "friendly_name": "Home",
-     "temperature": 12.4,
-     "humidity": 71,
-     "wind_speed": 18.4,
-     "wind_bearing": 225,
-     "wind_speed_unit": "km/h",
-     "uv_index": 1
-    }
-   },
-   "sun.sun": {
-    "s": "above_horizon",
-    "a": {
-     "next_rising": "2026-11-03T07:02:00+00:00",
-     "next_setting": "2026-11-02T16:29:00+00:00"
-    }
-   },
-   "calendar.family": {
-    "s": "on",
-    "a": {
-     "friendly_name": "Family",
-     "message": "Dentist"
-    }
-   },
-   "calendar.work": {
-    "s": "off",
-    "a": {
-     "friendly_name": "Work"
-    }
-   },
-   "sensor.viewassist_living_room": {
-    "s": "idle",
-    "a": {
-     "friendly_name": "Living room",
-     "mode": "normal",
-     "title": "Weather",
-     "message": "It's 12 degrees and partly cloudy. Rain is likely from about five this evening, heaviest around seven, and it should clear before midnight.",
-     "timers": [
+  "now": "2026-11-02T14:05:00+00:00",
+  "offset": 0,
+  "config": {
+    "host": "127.0.0.1",
+    "port": 8123,
+    "token": "fixture-token",
+    "weather": "weather.home",
+    "calendars": [
       {
-       "id": "pasta-1",
-       "name": "pasta",
-       "timer_class": "timer",
-       "status": "running",
-       "created_at": "2026-11-02T14:00:00+00:00",
-       "expires": "2026-11-02T14:17:21+00:00",
-       "original_expiry": "2026-11-02T14:17:21+00:00"
+        "entity": "calendar.family",
+        "name": "Family",
+        "icon": "mdi:home-heart"
       },
       {
-       "id": "tea-2",
-       "name": "",
-       "timer_class": "timer",
-       "status": "paused",
-       "created_at": "2026-11-02T13:50:00+00:00",
-       "expires": "2026-11-02T14:02:00+00:00",
-       "updated_at": "2026-11-02T13:57:00+00:00",
-       "remaining": 300
-      },
-      {
-       "id": "alarm-3",
-       "name": "",
-       "timer_class": "alarm",
-       "status": "running",
-       "created_at": "2026-11-02T09:00:00+00:00",
-       "expires": "2026-11-03T07:00:00+00:00"
-      },
-      {
-       "id": "old-4",
-       "name": "eggs",
-       "timer_class": "timer",
-       "status": "expired",
-       "created_at": "2026-11-02T12:00:00+00:00",
-       "expires": "2026-11-02T12:06:00+00:00"
+        "entity": "calendar.work",
+        "name": "Work",
+        "icon": "mdi:briefcase-outline"
       }
-     ]
+    ],
+    "view_assist": "sensor.viewassist_living_room",
+    "quick_minutes": [
+      5,
+      10,
+      15,
+      20
+    ],
+    "appliance_timers": [
+      {
+        "entity": "timer.washing_machine",
+        "name": "Washing machine",
+        "icon": "mdi:washing-machine"
+      }
+    ],
+    "wifi": {
+      "ssid": "Griffin guests",
+      "password": "correct horse battery",
+      "security": "WPA"
+    },
+    "agent_id": "conversation.home_assistant",
+    "wake_phrase": "Okay Nabu",
+    "room": "living room",
+    "read_only_entity": "input_boolean.visitors",
+    "rooms": [
+      {
+        "name": "Living room",
+        "icon": "mdi:sofa-outline",
+        "media": "media_player.living_room_speaker",
+        "tiles": [
+          {
+            "entity": "light.living_room",
+            "name": "Main lights",
+            "icon": "mdi:ceiling-light"
+          },
+          {
+            "entity": "light.living_room_lamp",
+            "name": "Floor lamp",
+            "icon": "mdi:floor-lamp"
+          },
+          {
+            "entity": "light.fireplace",
+            "name": "Fireplace",
+            "icon": "mdi:fireplace"
+          },
+          {
+            "entity": "climate.living_room",
+            "name": "Radiator",
+            "sensor": "sensor.living_room_temperature",
+            "boosts": [
+              {
+                "name": "21° for 2 hours",
+                "icon": "mdi:fire",
+                "service": "script.heating_set_room",
+                "response": true,
+                "data": {
+                  "room": "living_room",
+                  "temperature": 21,
+                  "minutes": 120,
+                  "by": "PS5"
+                }
+              },
+              {
+                "name": "Stop",
+                "icon": "mdi:radiator-off",
+                "service": "script.heating_set_room",
+                "response": true,
+                "data": {
+                  "room": "living_room",
+                  "temperature": 0,
+                  "minutes": 0,
+                  "by": "PS5"
+                }
+              }
+            ]
+          },
+          {
+            "entity": "cover.living_room_blinds",
+            "name": "Blinds"
+          },
+          {
+            "entity": "switch.air_purifier",
+            "name": "Air purifier",
+            "icon": "mdi:fan"
+          }
+        ],
+        "actions": [
+          {
+            "entity": "script.gaming_mode",
+            "name": "Gaming mode",
+            "icon": "mdi:gamepad-variant-outline"
+          },
+          {
+            "entity": "script.movie_time",
+            "name": "Movie time",
+            "icon": "mdi:movie-open-outline"
+          },
+          {
+            "entity": "script.lights_off",
+            "name": "Lights off",
+            "icon": "mdi:lightbulb-off-outline"
+          },
+          {
+            "entity": "script.good_night",
+            "name": "Good night",
+            "icon": "mdi:power-sleep",
+            "confirm": true
+          },
+          {
+            "entity": "script.house_everything_off",
+            "name": "Everything off",
+            "icon": "mdi:power",
+            "confirm": true
+          }
+        ],
+        "light": "light.living_room",
+        "scenes": [
+          {
+            "name": "Bright",
+            "icon": "mdi:brightness-7",
+            "brightness": 100,
+            "kelvin": 4000
+          },
+          {
+            "name": "Relax",
+            "icon": "mdi:sofa-outline",
+            "brightness": 45,
+            "kelvin": 2700
+          },
+          {
+            "name": "Cinema",
+            "icon": "mdi:movie-open-outline",
+            "service": "script.cinema_mode_toggle",
+            "entity": "input_boolean.cinema_mode"
+          },
+          {
+            "name": "Off",
+            "icon": "mdi:power",
+            "off": true
+          }
+        ]
+      },
+      {
+        "name": "Kitchen",
+        "icon": "mdi:silverware-fork-knife",
+        "media": "media_player.kitchen_speaker",
+        "tiles": [
+          {
+            "entity": "light.kitchen",
+            "name": "Ceiling"
+          },
+          {
+            "entity": "light.kitchen_pendants",
+            "name": "Pendants"
+          },
+          {
+            "entity": "sensor.kitchen_temperature",
+            "name": "Temperature"
+          },
+          {
+            "entity": "camera.front_door",
+            "name": "Front door"
+          }
+        ],
+        "actions": [
+          {
+            "entity": "script.lights_off",
+            "name": "Lights off",
+            "icon": "mdi:lightbulb-off-outline"
+          }
+        ]
+      }
+    ],
+    "doorbell": {
+      "trigger": "binary_sensor.front_door_ding",
+      "camera": "camera.front_door",
+      "name": "Front door"
+    },
+    "photos": "media-source://media_source/local/photos",
+    "notices": {
+      "entity": "sensor.house_notices",
+      "dismiss_event": "house_notice_dismiss"
+    },
+    "house": {
+      "undo_lights": "light.all_house_lights",
+      "actions": [
+        {
+          "name": "Everything off",
+          "icon": "mdi:power",
+          "service": "script.house_everything_off",
+          "confirm": true,
+          "undo": true
+        },
+        {
+          "name": "Good night",
+          "icon": "mdi:power-sleep",
+          "service": "script.good_night",
+          "data": {
+            "bedside": "off"
+          },
+          "confirm": true,
+          "undo": true
+        }
+      ],
+      "modes": [
+        {
+          "entity": "input_boolean.visitors",
+          "name": "Guests",
+          "icon": "mdi:account-multiple",
+          "about": "Visitors: personal things hidden, prompts quiet",
+          "on": {
+            "service": "script.house_guests_on"
+          },
+          "off": {
+            "service": "script.house_guests_off"
+          },
+          "confirm_off": true
+        },
+        {
+          "entity": "input_boolean.cinema_mode",
+          "name": "Cinema",
+          "icon": "mdi:movie-open-outline",
+          "about": "Living room lights down for a film",
+          "on": {
+            "service": "script.cinema_mode_toggle"
+          },
+          "off": {
+            "service": "script.cinema_mode_toggle"
+          }
+        },
+        {
+          "entity": "input_boolean.house_away",
+          "name": "Away",
+          "icon": "mdi:home-export-outline",
+          "about": "Lights, music, TV and warm-ups off while you are out"
+        },
+        {
+          "entity": "input_boolean.night_mode",
+          "name": "Night mode",
+          "icon": "mdi:weather-night",
+          "about": "Night lights, the night clock, quiet notices"
+        }
+      ]
+    },
+    "speakers": {
+      "group": {
+        "name": "Everywhere",
+        "player": "media_player.home_speakers"
+      },
+      "sleep_script": "script.music_sleep_timer",
+      "rooms": [
+        {
+          "name": "Living room",
+          "player": "media_player.living_room_speaker",
+          "sleep_timer": "timer.music_sleep_living_room"
+        },
+        {
+          "name": "Kitchen",
+          "player": "media_player.kitchen_speaker",
+          "sleep_timer": "timer.music_sleep_kitchen"
+        },
+        {
+          "name": "Bedroom",
+          "player": "media_player.bedroom_speaker",
+          "sleep_timer": "timer.music_sleep_bedroom"
+        }
+      ]
     }
-   },
-   "timer.washing_machine": {
-    "s": "active",
-    "a": {
-     "friendly_name": "Washing machine",
-     "finishes_at": "2026-11-02T15:10:00+00:00"
-    }
-   },
-   "input_boolean.visitors": {
-    "s": "off",
-    "a": {
-     "friendly_name": "Visitors"
-    }
-   },
-   "light.living_room": {
-    "s": "on",
-    "a": {
-     "friendly_name": "Living room",
-     "brightness": 140
-    }
-   },
-   "light.living_room_lamp": {
-    "s": "off",
-    "a": {
-     "friendly_name": "Floor lamp"
-    }
-   },
-   "light.fireplace": {
-    "s": "on",
-    "a": {
-     "friendly_name": "Fireplace",
-     "brightness": 255
-    }
-   },
-   "climate.living_room": {
-    "s": "heat",
-    "a": {
-     "friendly_name": "Living room",
-     "current_temperature": 20.5,
-     "hvac_action": "heating"
-    }
-   },
-   "cover.living_room_blinds": {
-    "s": "closed",
-    "a": {
-     "friendly_name": "Blinds"
-    }
-   },
-   "switch.air_purifier": {
-    "s": "off",
-    "a": {
-     "friendly_name": "Air purifier"
-    }
-   },
-   "media_player.living_room_speaker": {
-    "s": "playing",
-    "a": {
-     "friendly_name": "Living room speaker",
-     "media_title": "Harvest Moon",
-     "media_artist": "Neil Young",
-     "volume_level": 0.32
-    }
-   },
-   "script.gaming_mode": {
-    "s": "off",
-    "a": {
-     "friendly_name": "Gaming mode"
-    }
-   },
-   "script.movie_time": {
-    "s": "off",
-    "a": {
-     "friendly_name": "Movie time"
-    }
-   },
-   "script.lights_off": {
-    "s": "off",
-    "a": {
-     "friendly_name": "Lights off"
-    }
-   },
-   "script.good_night": {
-    "s": "off",
-    "a": {
-     "friendly_name": "Good night"
-    }
-   }
-  }
- },
- "catalog": [
-  {
-   "entity_id": "weather.home",
-   "state": "partlycloudy",
-   "attributes": {
-    "friendly_name": "Home"
-   }
   },
-  {
-   "entity_id": "weather.met_office_london",
-   "state": "rainy",
-   "attributes": {
-    "friendly_name": "Met Office London"
-   }
+  "states": {
+    "a": {
+      "weather.home": {
+        "s": "partlycloudy",
+        "a": {
+          "friendly_name": "Home",
+          "temperature": 12.4,
+          "humidity": 71,
+          "wind_speed": 18.4,
+          "wind_bearing": 225,
+          "wind_speed_unit": "km/h",
+          "uv_index": 1
+        }
+      },
+      "sun.sun": {
+        "s": "above_horizon",
+        "a": {
+          "next_rising": "2026-11-03T07:02:00+00:00",
+          "next_setting": "2026-11-02T16:29:00+00:00"
+        }
+      },
+      "calendar.family": {
+        "s": "on",
+        "a": {
+          "friendly_name": "Family",
+          "message": "Dentist"
+        }
+      },
+      "calendar.work": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Work"
+        }
+      },
+      "sensor.viewassist_living_room": {
+        "s": "idle",
+        "a": {
+          "friendly_name": "Living room",
+          "mode": "normal",
+          "title": "Weather",
+          "message": "It's 12 degrees and partly cloudy. Rain is likely from about five this evening, heaviest around seven, and it should clear before midnight.",
+          "timers": [
+            {
+              "id": "pasta-1",
+              "name": "pasta",
+              "timer_class": "timer",
+              "status": "running",
+              "created_at": "2026-11-02T14:00:00+00:00",
+              "expires": "2026-11-02T14:17:21+00:00",
+              "original_expiry": "2026-11-02T14:17:21+00:00"
+            },
+            {
+              "id": "tea-2",
+              "name": "",
+              "timer_class": "timer",
+              "status": "paused",
+              "created_at": "2026-11-02T13:50:00+00:00",
+              "expires": "2026-11-02T14:02:00+00:00",
+              "updated_at": "2026-11-02T13:57:00+00:00",
+              "remaining": 300
+            },
+            {
+              "id": "alarm-3",
+              "name": "",
+              "timer_class": "alarm",
+              "status": "running",
+              "created_at": "2026-11-02T09:00:00+00:00",
+              "expires": "2026-11-03T07:00:00+00:00"
+            },
+            {
+              "id": "old-4",
+              "name": "eggs",
+              "timer_class": "timer",
+              "status": "expired",
+              "created_at": "2026-11-02T12:00:00+00:00",
+              "expires": "2026-11-02T12:06:00+00:00"
+            }
+          ],
+          "background": "/local/rooms/living-room.jpg"
+        }
+      },
+      "timer.washing_machine": {
+        "s": "active",
+        "a": {
+          "friendly_name": "Washing machine",
+          "finishes_at": "2026-11-02T15:10:00+00:00"
+        }
+      },
+      "input_boolean.visitors": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Visitors"
+        }
+      },
+      "light.living_room": {
+        "s": "on",
+        "a": {
+          "friendly_name": "Living room",
+          "brightness": 140,
+          "supported_color_modes": [
+            "color_temp",
+            "hs"
+          ],
+          "color_mode": "color_temp",
+          "min_color_temp_kelvin": 2200,
+          "max_color_temp_kelvin": 6500,
+          "color_temp_kelvin": 2700,
+          "hs_color": [
+            30,
+            50
+          ],
+          "effect_list": [
+            "None",
+            "Candle",
+            "Sunset",
+            "Colour loop"
+          ],
+          "effect": "None",
+          "entity_id": [
+            "light.living_room_ceiling",
+            "light.living_room_wall"
+          ]
+        }
+      },
+      "light.living_room_lamp": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Floor lamp",
+          "supported_color_modes": [
+            "brightness"
+          ]
+        }
+      },
+      "light.fireplace": {
+        "s": "on",
+        "a": {
+          "friendly_name": "Fireplace",
+          "brightness": 255,
+          "supported_color_modes": [
+            "brightness"
+          ]
+        }
+      },
+      "climate.living_room": {
+        "s": "heat",
+        "a": {
+          "friendly_name": "Living room",
+          "current_temperature": 20.5,
+          "hvac_action": "heating",
+          "temperature": 21,
+          "min_temp": 7,
+          "max_temp": 28,
+          "target_temp_step": 0.5,
+          "hvac_modes": [
+            "off",
+            "heat",
+            "auto"
+          ],
+          "preset_modes": [
+            "none",
+            "eco",
+            "boost"
+          ],
+          "preset_mode": "none"
+        }
+      },
+      "cover.living_room_blinds": {
+        "s": "closed",
+        "a": {
+          "friendly_name": "Blinds",
+          "current_position": 0
+        }
+      },
+      "switch.air_purifier": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Air purifier"
+        }
+      },
+      "media_player.living_room_speaker": {
+        "s": "playing",
+        "a": {
+          "friendly_name": "Living room speaker",
+          "media_title": "Harvest Moon",
+          "media_artist": "Neil Young",
+          "volume_level": 0.32,
+          "media_album_name": "Harvest Moon",
+          "media_duration": 302,
+          "media_position": 98,
+          "media_position_updated_at": "2026-11-02T14:04:40+00:00",
+          "entity_picture": "/api/media_player_proxy/media_player.living_room_speaker?token=fixture&cache=1",
+          "is_volume_muted": false,
+          "shuffle": false,
+          "repeat": "off",
+          "source_list": [
+            "Spotify",
+            "Radio",
+            "Line in"
+          ],
+          "source": "Spotify",
+          "active_queue": "queue.living_room"
+        }
+      },
+      "script.gaming_mode": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Gaming mode"
+        }
+      },
+      "script.movie_time": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Movie time"
+        }
+      },
+      "script.lights_off": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Lights off"
+        }
+      },
+      "script.good_night": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Good night"
+        }
+      },
+      "script.house_everything_off": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Everything off"
+        }
+      },
+      "media_player.kitchen_speaker": {
+        "s": "paused",
+        "a": {
+          "friendly_name": "Kitchen speaker",
+          "media_title": "Morning Phase",
+          "media_artist": "Beck",
+          "volume_level": 0.2,
+          "active_queue": "queue.kitchen"
+        }
+      },
+      "light.kitchen": {
+        "s": "on",
+        "a": {
+          "friendly_name": "Kitchen",
+          "brightness": 200
+        }
+      },
+      "light.kitchen_pendants": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Kitchen pendants"
+        }
+      },
+      "sensor.kitchen_temperature": {
+        "s": "21.5",
+        "a": {
+          "friendly_name": "Kitchen temperature",
+          "unit_of_measurement": "°C",
+          "device_class": "temperature"
+        }
+      },
+      "binary_sensor.front_door_ding": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Front door ding",
+          "device_class": "occupancy"
+        }
+      },
+      "camera.front_door": {
+        "s": "idle",
+        "a": {
+          "friendly_name": "Front door",
+          "entity_picture": "/api/camera_proxy/camera.front_door?token=fixture"
+        }
+      },
+      "sensor.house_notices": {
+        "s": "2026-11-02T13:50:00+00:00",
+        "a": {
+          "friendly_name": "House notices",
+          "items": [
+            {
+              "id": "1793628000.001",
+              "key": "dishwasher:done",
+              "title": "The dishwasher is clean",
+              "message": "Empty it when you can",
+              "icon": "mdi:dishwasher",
+              "level": "info",
+              "rooms": [
+                "kitchen"
+              ],
+              "at": "2026-11-02T13:20:00+00:00"
+            },
+            {
+              "id": "1793629800.002",
+              "key": "door:front",
+              "title": "Front door open",
+              "message": "Open for 2 minutes",
+              "icon": "mdi:door-open",
+              "level": "warn",
+              "rooms": [
+                "hallway"
+              ],
+              "at": "2026-11-02T13:50:00+00:00"
+            }
+          ]
+        }
+      },
+      "light.living_room_ceiling": {
+        "s": "on",
+        "a": {
+          "friendly_name": "Ceiling",
+          "brightness": 140,
+          "supported_color_modes": [
+            "brightness"
+          ]
+        }
+      },
+      "light.living_room_wall": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Wall light",
+          "supported_color_modes": [
+            "onoff"
+          ]
+        }
+      },
+      "sensor.living_room_temperature": {
+        "s": "20.5",
+        "a": {
+          "friendly_name": "Living room temperature",
+          "unit_of_measurement": "°C",
+          "device_class": "temperature"
+        }
+      },
+      "input_boolean.cinema_mode": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Cinema"
+        }
+      },
+      "input_boolean.house_away": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Away"
+        }
+      },
+      "input_boolean.night_mode": {
+        "s": "off",
+        "a": {
+          "friendly_name": "Night mode"
+        }
+      },
+      "media_player.home_speakers": {
+        "s": "idle",
+        "a": {
+          "friendly_name": "Home speakers",
+          "volume_level": 0.3,
+          "active_queue": "queue.group",
+          "group_members": [
+            "media_player.living_room_speaker",
+            "media_player.kitchen_speaker",
+            "media_player.bedroom_speaker"
+          ]
+        }
+      },
+      "media_player.bedroom_speaker": {
+        "s": "idle",
+        "a": {
+          "friendly_name": "Bedroom speaker",
+          "volume_level": 0.15,
+          "active_queue": "queue.bedroom"
+        }
+      },
+      "timer.music_sleep_living_room": {
+        "s": "idle",
+        "a": {
+          "friendly_name": "Music sleep"
+        }
+      },
+      "timer.music_sleep_kitchen": {
+        "s": "idle",
+        "a": {
+          "friendly_name": "Music sleep"
+        }
+      },
+      "timer.music_sleep_bedroom": {
+        "s": "idle",
+        "a": {
+          "friendly_name": "Music sleep"
+        }
+      },
+      "light.all_house_lights": {
+        "s": "on",
+        "a": {
+          "friendly_name": "All lights",
+          "entity_id": [
+            "light.living_room",
+            "light.kitchen",
+            "light.fireplace",
+            "light.living_room_lamp"
+          ]
+        }
+      }
+    }
   },
-  {
-   "entity_id": "calendar.family",
-   "state": "on",
-   "attributes": {
-    "friendly_name": "Family"
-   }
+  "catalog": [
+    {
+      "entity_id": "weather.home",
+      "state": "partlycloudy",
+      "attributes": {
+        "friendly_name": "Home"
+      }
+    },
+    {
+      "entity_id": "weather.met_office_london",
+      "state": "rainy",
+      "attributes": {
+        "friendly_name": "Met Office London"
+      }
+    },
+    {
+      "entity_id": "calendar.family",
+      "state": "on",
+      "attributes": {
+        "friendly_name": "Family"
+      }
+    },
+    {
+      "entity_id": "calendar.work",
+      "state": "off",
+      "attributes": {
+        "friendly_name": "Work"
+      }
+    },
+    {
+      "entity_id": "calendar.uk_holidays",
+      "state": "off",
+      "attributes": {
+        "friendly_name": "UK holidays"
+      }
+    },
+    {
+      "entity_id": "sensor.viewassist_living_room",
+      "state": "idle",
+      "attributes": {
+        "friendly_name": "Living room",
+        "timers": []
+      }
+    },
+    {
+      "entity_id": "sensor.viewassist_kitchen",
+      "state": "idle",
+      "attributes": {
+        "friendly_name": "Kitchen",
+        "timers": []
+      }
+    },
+    {
+      "entity_id": "sensor.outdoor_temperature",
+      "state": "12.4",
+      "attributes": {
+        "friendly_name": "Outdoor temperature"
+      }
+    },
+    {
+      "entity_id": "timer.washing_machine",
+      "state": "active",
+      "attributes": {
+        "friendly_name": "Washing machine"
+      }
+    },
+    {
+      "entity_id": "timer.dryer",
+      "state": "idle",
+      "attributes": {
+        "friendly_name": "Dryer"
+      }
+    },
+    {
+      "entity_id": "conversation.home_assistant",
+      "state": "unknown",
+      "attributes": {
+        "friendly_name": "Home Assistant"
+      }
+    },
+    {
+      "entity_id": "input_boolean.visitors",
+      "state": "off",
+      "attributes": {
+        "friendly_name": "Visitors"
+      }
+    },
+    {
+      "entity_id": "light.living_room",
+      "state": "on",
+      "attributes": {
+        "friendly_name": "Living room lights"
+      }
+    }
+  ],
+  "forecasts": {
+    "hourly": {
+      "weather.home": {
+        "forecast": [
+          {
+            "datetime": "2026-11-02T14:00:00+00:00",
+            "condition": "partlycloudy",
+            "temperature": 12.4,
+            "precipitation": 0
+          },
+          {
+            "datetime": "2026-11-02T15:00:00+00:00",
+            "condition": "partlycloudy",
+            "temperature": 12.8,
+            "precipitation": 0
+          },
+          {
+            "datetime": "2026-11-02T16:00:00+00:00",
+            "condition": "cloudy",
+            "temperature": 12.1,
+            "precipitation": 0
+          },
+          {
+            "datetime": "2026-11-02T17:00:00+00:00",
+            "condition": "rainy",
+            "temperature": 11.2,
+            "precipitation": 0.4
+          },
+          {
+            "datetime": "2026-11-02T18:00:00+00:00",
+            "condition": "rainy",
+            "temperature": 10.6,
+            "precipitation": 1.2
+          },
+          {
+            "datetime": "2026-11-02T19:00:00+00:00",
+            "condition": "pouring",
+            "temperature": 10.1,
+            "precipitation": 2.6
+          },
+          {
+            "datetime": "2026-11-02T20:00:00+00:00",
+            "condition": "rainy",
+            "temperature": 9.6,
+            "precipitation": 0.8
+          },
+          {
+            "datetime": "2026-11-02T21:00:00+00:00",
+            "condition": "cloudy",
+            "temperature": 9.0,
+            "precipitation": 0.1
+          },
+          {
+            "datetime": "2026-11-02T22:00:00+00:00",
+            "condition": "cloudy",
+            "temperature": 8.4,
+            "precipitation": 0
+          },
+          {
+            "datetime": "2026-11-02T23:00:00+00:00",
+            "condition": "clear-night",
+            "temperature": 7.9,
+            "precipitation": 0
+          },
+          {
+            "datetime": "2026-11-03T00:00:00+00:00",
+            "condition": "clear-night",
+            "temperature": 7.5,
+            "precipitation": 0
+          },
+          {
+            "datetime": "2026-11-03T01:00:00+00:00",
+            "condition": "clear-night",
+            "temperature": 7.2,
+            "precipitation": 0
+          },
+          {
+            "datetime": "2026-11-03T02:00:00+00:00",
+            "condition": "clear-night",
+            "temperature": 7.0,
+            "precipitation": 0
+          },
+          {
+            "datetime": "2026-11-03T03:00:00+00:00",
+            "condition": "partlycloudy",
+            "temperature": 6.8,
+            "precipitation": 0
+          }
+        ]
+      }
+    },
+    "daily": {
+      "weather.home": {
+        "forecast": [
+          {
+            "datetime": "2026-11-02T00:00:00+00:00",
+            "condition": "rainy",
+            "temperature": 13.2,
+            "templow": 6.4,
+            "precipitation": 4.6
+          },
+          {
+            "datetime": "2026-11-03T00:00:00+00:00",
+            "condition": "partlycloudy",
+            "temperature": 11.6,
+            "templow": 4.2,
+            "precipitation": 0
+          },
+          {
+            "datetime": "2026-11-04T00:00:00+00:00",
+            "condition": "sunny",
+            "temperature": 10.4,
+            "templow": 2.1,
+            "precipitation": 0
+          },
+          {
+            "datetime": "2026-11-05T00:00:00+00:00",
+            "condition": "rainy",
+            "temperature": 12.0,
+            "templow": 7.3,
+            "precipitation": 8.2
+          },
+          {
+            "datetime": "2026-11-06T00:00:00+00:00",
+            "condition": "cloudy",
+            "temperature": 11.1,
+            "templow": 6.0,
+            "precipitation": 0.3
+          },
+          {
+            "datetime": "2026-11-07T00:00:00+00:00",
+            "condition": "windy",
+            "temperature": 9.8,
+            "templow": 5.5,
+            "precipitation": 1.1
+          }
+        ]
+      }
+    }
   },
-  {
-   "entity_id": "calendar.work",
-   "state": "off",
-   "attributes": {
-    "friendly_name": "Work"
-   }
+  "events": {
+    "calendar.family": {
+      "calendar.family": {
+        "events": [
+          {
+            "start": "2026-11-02",
+            "end": "2026-11-03",
+            "summary": "Bin day"
+          },
+          {
+            "start": "2026-11-02T08:30:00+00:00",
+            "end": "2026-11-02T09:00:00+00:00",
+            "summary": "School run"
+          },
+          {
+            "start": "2026-11-02T13:30:00+00:00",
+            "end": "2026-11-02T15:00:00+00:00",
+            "summary": "Dentist",
+            "location": "Smile Dental, 14 Station Road, Bristol"
+          },
+          {
+            "start": "2026-11-02T16:00:00+00:00",
+            "end": "2026-11-02T17:00:00+00:00",
+            "summary": "Cancelled: Swimming lesson"
+          },
+          {
+            "start": "2026-11-02T18:30:00+00:00",
+            "end": "2026-11-02T21:00:00+00:00",
+            "summary": "Dinner with Sam and Priya at the new place on the harbour",
+            "location": "The Old Bell, High Street"
+          },
+          {
+            "start": "2026-11-03",
+            "end": "2026-11-04",
+            "summary": "Mum's birthday"
+          },
+          {
+            "start": "2026-11-03T07:30:00+00:00",
+            "end": "2026-11-03T08:30:00+00:00",
+            "summary": "Gym"
+          }
+        ]
+      }
+    },
+    "calendar.work": {
+      "calendar.work": {
+        "events": [
+          {
+            "start": "2026-11-02T10:00:00+00:00",
+            "end": "2026-11-02T11:00:00+00:00",
+            "summary": "Stand-up",
+            "location": "Microsoft Teams Meeting"
+          },
+          {
+            "start": "2026-11-03T10:00:00+00:00",
+            "end": "2026-11-03T11:30:00+00:00",
+            "summary": "Project review",
+            "location": "https://zoom.us/j/123"
+          }
+        ]
+      }
+    }
   },
-  {
-   "entity_id": "calendar.uk_holidays",
-   "state": "off",
-   "attributes": {
-    "friendly_name": "UK holidays"
-   }
+  "reply": {
+    "response": {
+      "speech": {
+        "plain": {
+          "speech": "Turned on the lights in the living room."
+        }
+      },
+      "response_type": "action_done"
+    },
+    "conversation_id": "01JFIXTURE"
   },
-  {
-   "entity_id": "sensor.viewassist_living_room",
-   "state": "idle",
-   "attributes": {
-    "friendly_name": "Living room",
-    "timers": []
-   }
+  "media": {
+    "browse": {
+      "title": "photos",
+      "children": [
+        {
+          "media_content_id": "media-source://media_source/local/photos/harbour.jpg",
+          "media_class": "image",
+          "media_content_type": "image/jpeg"
+        },
+        {
+          "media_content_id": "media-source://media_source/local/photos/2025",
+          "title": "2025",
+          "media_class": "directory",
+          "media_content_type": ""
+        },
+        {
+          "media_content_id": "media-source://media_source/local/photos/fells.png",
+          "media_class": "image",
+          "media_content_type": "image/png"
+        }
+      ]
+    },
+    "resolve": {
+      "url": "/media/local/photos/harbour.jpg?authSig=fixture",
+      "mime_type": "image/jpeg"
+    }
   },
-  {
-   "entity_id": "sensor.viewassist_kitchen",
-   "state": "idle",
-   "attributes": {
-    "friendly_name": "Kitchen",
-    "timers": []
-   }
-  },
-  {
-   "entity_id": "sensor.outdoor_temperature",
-   "state": "12.4",
-   "attributes": {
-    "friendly_name": "Outdoor temperature"
-   }
-  },
-  {
-   "entity_id": "timer.washing_machine",
-   "state": "active",
-   "attributes": {
-    "friendly_name": "Washing machine"
-   }
-  },
-  {
-   "entity_id": "timer.dryer",
-   "state": "idle",
-   "attributes": {
-    "friendly_name": "Dryer"
-   }
-  },
-  {
-   "entity_id": "conversation.home_assistant",
-   "state": "unknown",
-   "attributes": {
-    "friendly_name": "Home Assistant"
-   }
-  },
-  {
-   "entity_id": "input_boolean.visitors",
-   "state": "off",
-   "attributes": {
-    "friendly_name": "Visitors"
-   }
-  },
-  {
-   "entity_id": "light.living_room",
-   "state": "on",
-   "attributes": {
-    "friendly_name": "Living room lights"
-   }
-  }
- ],
- "forecasts": {
-  "hourly": {
-   "weather.home": {
-    "forecast": [
-     {
-      "datetime": "2026-11-02T14:00:00+00:00",
-      "condition": "partlycloudy",
-      "temperature": 12.4,
-      "precipitation": 0
-     },
-     {
-      "datetime": "2026-11-02T15:00:00+00:00",
-      "condition": "partlycloudy",
-      "temperature": 12.8,
-      "precipitation": 0
-     },
-     {
-      "datetime": "2026-11-02T16:00:00+00:00",
-      "condition": "cloudy",
-      "temperature": 12.1,
-      "precipitation": 0
-     },
-     {
-      "datetime": "2026-11-02T17:00:00+00:00",
-      "condition": "rainy",
-      "temperature": 11.2,
-      "precipitation": 0.4
-     },
-     {
-      "datetime": "2026-11-02T18:00:00+00:00",
-      "condition": "rainy",
-      "temperature": 10.6,
-      "precipitation": 1.2
-     },
-     {
-      "datetime": "2026-11-02T19:00:00+00:00",
-      "condition": "pouring",
-      "temperature": 10.1,
-      "precipitation": 2.6
-     },
-     {
-      "datetime": "2026-11-02T20:00:00+00:00",
-      "condition": "rainy",
-      "temperature": 9.6,
-      "precipitation": 0.8
-     },
-     {
-      "datetime": "2026-11-02T21:00:00+00:00",
-      "condition": "cloudy",
-      "temperature": 9.0,
-      "precipitation": 0.1
-     },
-     {
-      "datetime": "2026-11-02T22:00:00+00:00",
-      "condition": "cloudy",
-      "temperature": 8.4,
-      "precipitation": 0
-     },
-     {
-      "datetime": "2026-11-02T23:00:00+00:00",
-      "condition": "clear-night",
-      "temperature": 7.9,
-      "precipitation": 0
-     },
-     {
-      "datetime": "2026-11-03T00:00:00+00:00",
-      "condition": "clear-night",
-      "temperature": 7.5,
-      "precipitation": 0
-     },
-     {
-      "datetime": "2026-11-03T01:00:00+00:00",
-      "condition": "clear-night",
-      "temperature": 7.2,
-      "precipitation": 0
-     },
-     {
-      "datetime": "2026-11-03T02:00:00+00:00",
-      "condition": "clear-night",
-      "temperature": 7.0,
-      "precipitation": 0
-     },
-     {
-      "datetime": "2026-11-03T03:00:00+00:00",
-      "condition": "partlycloudy",
-      "temperature": 6.8,
-      "precipitation": 0
-     }
+  "history": {
+    "sensor.living_room_temperature": [
+      {
+        "s": "20.5",
+        "lu": 1793541900.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793542800.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793543700.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793544600.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793545500.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793546400.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793547300.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793548200.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793549100.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793550000.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793550900.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793551800.0
+      },
+      {
+        "s": "19.5",
+        "lu": 1793552700.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793553600.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793554500.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793555400.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793556300.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793557200.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793558100.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793559000.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793559900.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793560800.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793561700.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793562600.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793563500.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793564400.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793565300.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793566200.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793567100.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793568000.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793568900.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793569800.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793570700.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793571600.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793572500.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793573400.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793574300.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793575200.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793576100.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793577000.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793577900.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793578800.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793579700.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793580600.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793581500.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793582400.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793583300.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793584200.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793585100.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793586000.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793586900.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793587800.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793588700.0
+      },
+      {
+        "s": "19.5",
+        "lu": 1793589600.0
+      },
+      {
+        "s": "19.5",
+        "lu": 1793590500.0
+      },
+      {
+        "s": "19.5",
+        "lu": 1793591400.0
+      },
+      {
+        "s": "19.5",
+        "lu": 1793592300.0
+      },
+      {
+        "s": "19.5",
+        "lu": 1793593200.0
+      },
+      {
+        "s": "19.5",
+        "lu": 1793594100.0
+      },
+      {
+        "s": "19.0",
+        "lu": 1793595000.0
+      },
+      {
+        "s": "19.0",
+        "lu": 1793595900.0
+      },
+      {
+        "s": "19.0",
+        "lu": 1793596800.0
+      },
+      {
+        "s": "19.0",
+        "lu": 1793597700.0
+      },
+      {
+        "s": "19.0",
+        "lu": 1793598600.0
+      },
+      {
+        "s": "19.0",
+        "lu": 1793599500.0
+      },
+      {
+        "s": "18.5",
+        "lu": 1793600400.0
+      },
+      {
+        "s": "19.0",
+        "lu": 1793601300.0
+      },
+      {
+        "s": "19.0",
+        "lu": 1793602200.0
+      },
+      {
+        "s": "19.0",
+        "lu": 1793603100.0
+      },
+      {
+        "s": "19.5",
+        "lu": 1793604000.0
+      },
+      {
+        "s": "19.5",
+        "lu": 1793604900.0
+      },
+      {
+        "s": "19.5",
+        "lu": 1793605800.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793606700.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793607600.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793608500.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793609400.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793610300.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793611200.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793612100.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793613000.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793613900.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793614800.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793615700.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793616600.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793617500.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793618400.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793619300.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793620200.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793621100.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793622000.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793622900.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793623800.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793624700.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793625600.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793626500.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793627400.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793628300.0
+      }
+    ],
+    "climate.living_room": [
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793541900.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793542800.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793543700.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793544600.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793545500.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793546400.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793547300.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793548200.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793549100.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793550000.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793550900.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793551800.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.5,
+          "temperature": 21
+        },
+        "lu": 1793552700.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.0,
+          "temperature": 21
+        },
+        "lu": 1793553600.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793554500.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793555400.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.0,
+          "temperature": 21
+        },
+        "lu": 1793556300.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.0,
+          "temperature": 21
+        },
+        "lu": 1793557200.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793558100.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793559000.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793559900.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793560800.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793561700.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793562600.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793563500.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793564400.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793565300.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793566200.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793567100.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793568000.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793568900.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793569800.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793570700.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793571600.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.5,
+          "temperature": 21
+        },
+        "lu": 1793572500.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.0,
+          "temperature": 21
+        },
+        "lu": 1793573400.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.0,
+          "temperature": 21
+        },
+        "lu": 1793574300.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.0,
+          "temperature": 21
+        },
+        "lu": 1793575200.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.0,
+          "temperature": 21
+        },
+        "lu": 1793576100.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.0,
+          "temperature": 21
+        },
+        "lu": 1793577000.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 21.0,
+          "temperature": 21
+        },
+        "lu": 1793577900.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793578800.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793579700.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793580600.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793581500.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793582400.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793583300.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.0,
+          "temperature": 21
+        },
+        "lu": 1793584200.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.0,
+          "temperature": 21
+        },
+        "lu": 1793585100.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.0,
+          "temperature": 21
+        },
+        "lu": 1793586000.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.0,
+          "temperature": 21
+        },
+        "lu": 1793586900.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.0,
+          "temperature": 21
+        },
+        "lu": 1793587800.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.0,
+          "temperature": 21
+        },
+        "lu": 1793588700.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.5,
+          "temperature": 21
+        },
+        "lu": 1793589600.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.5,
+          "temperature": 21
+        },
+        "lu": 1793590500.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.5,
+          "temperature": 21
+        },
+        "lu": 1793591400.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.5,
+          "temperature": 21
+        },
+        "lu": 1793592300.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.5,
+          "temperature": 21
+        },
+        "lu": 1793593200.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.5,
+          "temperature": 21
+        },
+        "lu": 1793594100.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.0,
+          "temperature": 21
+        },
+        "lu": 1793595000.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.0,
+          "temperature": 21
+        },
+        "lu": 1793595900.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.0,
+          "temperature": 21
+        },
+        "lu": 1793596800.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.0,
+          "temperature": 21
+        },
+        "lu": 1793597700.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.0,
+          "temperature": 21
+        },
+        "lu": 1793598600.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.0,
+          "temperature": 21
+        },
+        "lu": 1793599500.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 18.5,
+          "temperature": 21
+        },
+        "lu": 1793600400.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.0,
+          "temperature": 21
+        },
+        "lu": 1793601300.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.0,
+          "temperature": 21
+        },
+        "lu": 1793602200.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.0,
+          "temperature": 21
+        },
+        "lu": 1793603100.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.5,
+          "temperature": 21
+        },
+        "lu": 1793604000.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.5,
+          "temperature": 21
+        },
+        "lu": 1793604900.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 19.5,
+          "temperature": 21
+        },
+        "lu": 1793605800.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.0,
+          "temperature": 21
+        },
+        "lu": 1793606700.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.0,
+          "temperature": 21
+        },
+        "lu": 1793607600.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.0,
+          "temperature": 21
+        },
+        "lu": 1793608500.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793609400.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793610300.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793611200.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793612100.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793613000.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793613900.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793614800.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793615700.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793616600.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793617500.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793618400.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793619300.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793620200.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793621100.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793622000.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793622900.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793623800.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793624700.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793625600.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793626500.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793627400.0
+      },
+      {
+        "s": "heat",
+        "a": {
+          "current_temperature": 20.5,
+          "temperature": 21
+        },
+        "lu": 1793628300.0
+      }
+    ],
+    "sensor.kitchen_temperature": [
+      {
+        "s": "21.5",
+        "lu": 1793541900.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793542800.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793543700.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793544600.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793545500.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793546400.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793547300.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793548200.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793549100.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793550000.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793550900.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793551800.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793552700.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793553600.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793554500.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793555400.0
+      },
+      {
+        "s": "22.0",
+        "lu": 1793556300.0
+      },
+      {
+        "s": "22.0",
+        "lu": 1793557200.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793558100.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793559000.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793559900.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793560800.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793561700.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793562600.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793563500.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793564400.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793565300.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793566200.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793567100.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793568000.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793568900.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793569800.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793570700.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793571600.0
+      },
+      {
+        "s": "22.5",
+        "lu": 1793572500.0
+      },
+      {
+        "s": "22.0",
+        "lu": 1793573400.0
+      },
+      {
+        "s": "22.0",
+        "lu": 1793574300.0
+      },
+      {
+        "s": "22.0",
+        "lu": 1793575200.0
+      },
+      {
+        "s": "22.0",
+        "lu": 1793576100.0
+      },
+      {
+        "s": "22.0",
+        "lu": 1793577000.0
+      },
+      {
+        "s": "22.0",
+        "lu": 1793577900.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793578800.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793579700.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793580600.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793581500.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793582400.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793583300.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793584200.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793585100.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793586000.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793586900.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793587800.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793588700.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793589600.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793590500.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793591400.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793592300.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793593200.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793594100.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793595000.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793595900.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793596800.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793597700.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793598600.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793599500.0
+      },
+      {
+        "s": "19.5",
+        "lu": 1793600400.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793601300.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793602200.0
+      },
+      {
+        "s": "20.0",
+        "lu": 1793603100.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793604000.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793604900.0
+      },
+      {
+        "s": "20.5",
+        "lu": 1793605800.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793606700.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793607600.0
+      },
+      {
+        "s": "21.0",
+        "lu": 1793608500.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793609400.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793610300.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793611200.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793612100.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793613000.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793613900.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793614800.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793615700.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793616600.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793617500.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793618400.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793619300.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793620200.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793621100.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793622000.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793622900.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793623800.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793624700.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793625600.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793626500.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793627400.0
+      },
+      {
+        "s": "21.5",
+        "lu": 1793628300.0
+      }
     ]
-   }
-  },
-  "daily": {
-   "weather.home": {
-    "forecast": [
-     {
-      "datetime": "2026-11-02T00:00:00+00:00",
-      "condition": "rainy",
-      "temperature": 13.2,
-      "templow": 6.4,
-      "precipitation": 4.6
-     },
-     {
-      "datetime": "2026-11-03T00:00:00+00:00",
-      "condition": "partlycloudy",
-      "temperature": 11.6,
-      "templow": 4.2,
-      "precipitation": 0
-     },
-     {
-      "datetime": "2026-11-04T00:00:00+00:00",
-      "condition": "sunny",
-      "temperature": 10.4,
-      "templow": 2.1,
-      "precipitation": 0
-     },
-     {
-      "datetime": "2026-11-05T00:00:00+00:00",
-      "condition": "rainy",
-      "temperature": 12.0,
-      "templow": 7.3,
-      "precipitation": 8.2
-     },
-     {
-      "datetime": "2026-11-06T00:00:00+00:00",
-      "condition": "cloudy",
-      "temperature": 11.1,
-      "templow": 6.0,
-      "precipitation": 0.3
-     },
-     {
-      "datetime": "2026-11-07T00:00:00+00:00",
-      "condition": "windy",
-      "temperature": 9.8,
-      "templow": 5.5,
-      "precipitation": 1.1
-     }
-    ]
-   }
   }
- },
- "events": {
-  "calendar.family": {
-   "calendar.family": {
-    "events": [
-     {
-      "start": "2026-11-02",
-      "end": "2026-11-03",
-      "summary": "Bin day"
-     },
-     {
-      "start": "2026-11-02T08:30:00+00:00",
-      "end": "2026-11-02T09:00:00+00:00",
-      "summary": "School run"
-     },
-     {
-      "start": "2026-11-02T13:30:00+00:00",
-      "end": "2026-11-02T15:00:00+00:00",
-      "summary": "Dentist",
-      "location": "Smile Dental, 14 Station Road, Bristol"
-     },
-     {
-      "start": "2026-11-02T16:00:00+00:00",
-      "end": "2026-11-02T17:00:00+00:00",
-      "summary": "Cancelled: Swimming lesson"
-     },
-     {
-      "start": "2026-11-02T18:30:00+00:00",
-      "end": "2026-11-02T21:00:00+00:00",
-      "summary": "Dinner with Sam and Priya at the new place on the harbour",
-      "location": "The Old Bell, High Street"
-     },
-     {
-      "start": "2026-11-03",
-      "end": "2026-11-04",
-      "summary": "Mum's birthday"
-     },
-     {
-      "start": "2026-11-03T07:30:00+00:00",
-      "end": "2026-11-03T08:30:00+00:00",
-      "summary": "Gym"
-     }
-    ]
-   }
-  },
-  "calendar.work": {
-   "calendar.work": {
-    "events": [
-     {
-      "start": "2026-11-02T10:00:00+00:00",
-      "end": "2026-11-02T11:00:00+00:00",
-      "summary": "Stand-up",
-      "location": "Microsoft Teams Meeting"
-     },
-     {
-      "start": "2026-11-03T10:00:00+00:00",
-      "end": "2026-11-03T11:30:00+00:00",
-      "summary": "Project review",
-      "location": "https://zoom.us/j/123"
-     }
-    ]
-   }
-  }
- },
- "reply": {
-  "response": {
-   "speech": {
-    "plain": {
-     "speech": "Turned on the lights in the living room."
-    }
-   },
-   "response_type": "action_done"
-  },
-  "conversation_id": "01JFIXTURE"
- }
 }

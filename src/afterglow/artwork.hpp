@@ -34,9 +34,9 @@ struct ArtworkResult
 // Defined in artwork_fetch.cpp, which needs projectM's stb_image.
 bool fetch_image(const std::string &url, const std::function<bool()> &cancelled,
                  std::vector<std::uint8_t> &body);
-// JPEG or PNG to RGBA8, refusing anything over 2048 px a side before allocating.
+// JPEG or PNG to RGBA8, refusing anything over max_side px a side before allocating.
 bool decode_image(const std::vector<std::uint8_t> &body, std::vector<std::uint8_t> &rgba,
-                  int &width, int &height);
+                  int &width, int &height, int max_side = 2048);
 
 struct ArtworkOptions
 {

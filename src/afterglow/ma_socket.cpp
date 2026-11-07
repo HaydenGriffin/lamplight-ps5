@@ -386,6 +386,10 @@ bool Socket::send_text(const std::string &text)
 {
     return send_frame(1, reinterpret_cast<const std::uint8_t *>(text.data()), text.size());
 }
+bool Socket::send_binary(const std::uint8_t *data, std::size_t size)
+{
+    return send_frame(2, data, size);
+}
 
 bool Socket::read_frames()
 {

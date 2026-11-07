@@ -5,6 +5,7 @@
   be7b0cd, which took it from [Afterglow for PS5](https://github.com/HaydenGriffin/afterglow-ps5) at
   4e0862028d40c695f86e44a5266b67740e895c60 and BlackBearReloaded's ps5-homebrew-ui. Original copyright headers
   are kept. Changes here: the JSON decimal patch is in the `lamplight` namespace, and the font baker gained
-  `range:` and `digits=`.
+  `range:` and `digits=`, the websocket (`src/afterglow/ma_socket`) can send binary frames, `decode_image` takes the largest side it
+  accepts, and `DrawList::corner_glow` (with its branch in the shader) draws light from a rounded shape's corner.
 - The pages, words and rules follow [Lamplight](https://github.com/HaydenGriffin/lamplight) 1.2.0 (its cards in
   `src/cards/` and its `DESIGN.md`).

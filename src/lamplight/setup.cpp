@@ -16,6 +16,10 @@ enum Row
     port,
     token,
     connect,
+    mood_row,
+    background_row,
+    folder_row,
+    interval_row,
     weather_row,
     calendars_row,
     view_assist_row,
@@ -26,6 +30,7 @@ enum Row
     ssid_row,
     password_row,
     visitors_row,
+    clock_row,
     motion_row,
     vibration_row,
     forget_row,
@@ -59,7 +64,8 @@ std::vector<CatalogEntry> Application::pick_options() const
                           : pick_ == Pick::view_assist ? e.has_timers
                           : pick_ == Pick::appliances  ? domain == "timer"
                           : pick_ == Pick::agent       ? domain == "conversation"
-                                                 : domain == "input_boolean" || domain == "switch";
+                          : pick_ == Pick::photos      ? false
+                                                  : domain == "input_boolean" || domain == "switch";
         if (fits)
             out.push_back(e);
     }
@@ -98,6 +104,18 @@ void Application::rebuild_list()
         row("Access token", "Long-lived token; hidden while you type",
             config_.token.empty() ? "Not set" : "Set");
         row("Connect / retry", "Apply the address and token");
+        row("Resting clock", "Stars, clouds and rain behind it, or plain",
+            config_.mood ? "Sky" : "Plain");
+        row("Background", "Behind the clock and the pages",
+            config_.background == "sky"      ? "Sky"
+            : config_.background == "photos" ? "Photos"
+            : config_.background == "room"   ? "Room photo"
+                                             : "Picture");
+        row("Photo folder", "From Home Assistant's media: the slideshow and the resting clock",
+            config_.photos.empty() ? "None" : photo_folder_name(config_.photos), !ready(), true);
+        row("Photo every", "How long each photo stays",
+            config_.photo_seconds < 60 ? std::to_string(config_.photo_seconds) + " s"
+                                       : std::to_string(config_.photo_seconds / 60) + " min");
         row("Weather", "The forecast for Weather and the clock", name(config_.weather, "None"),
             !ready(), true);
         row("Calendars", "Today and tomorrow on Agenda",
@@ -117,12 +135,34 @@ void Application::rebuild_list()
             config_.wifi_password.empty() ? "None (open)" : "Set");
         row("Visitors switch", "While it's on, Help's examples run nothing",
             name(config_.read_only, "None"), !ready(), true);
+        row("Clock", "12 or 24 hours; Automatic follows Home Assistant's country",
+            config_.clock == "12h"   ? "12-hour"
+            : config_.clock == "24h" ? "24-hour"
+                                     : "Automatic");
         row("Reduce motion", "No pulsing dot, no moving focus",
             config_.reduced_motion ? "On" : "Off");
         row("Controller vibration", "A short rumble on each move",
             config_.vibration ? "On" : "Off");
         row("Disconnect and forget token", "Keep the other settings on this PS5");
         row("Close Lamplight", "Return to the PS5 home screen");
+    }
+    else if (page_ == Page::pick && pick_ == Pick::photos)
+    {
+        pick_ids_.clear();
+        const bool top = folder_path_.size() <= 1;
+        row(top ? "No photos" : "Use this folder",
+            top ? "The resting clock draws the sky"
+                : std::to_string(folder_pictures_) + " pictures here, and any in its folders",
+            config_.photos == folder_path_.back() ? "Selected" : "",
+            folder_loading_ || folder_failed_);
+        pick_ids_.push_back("");
+        if (folder_loading_)
+            row("Reading\xE2\x80\xA6", "", "", true);
+        for (const auto &[id, title] : folder_items_)
+        {
+            row(title, "", "", false, true);
+            pick_ids_.push_back(id);
+        }
     }
     else if (page_ == Page::pick)
     {
@@ -165,7 +205,8 @@ void Application::rebuild_list()
 }
 void Application::refresh_lists()
 {
-    if (page_ != Page::setup && page_ != Page::pick)
+    if ((page_ != Page::setup && page_ != Page::pick) ||
+        (page_ == Page::pick && pick_ == Pick::photos))
         return;
     std::size_t catalog = std::hash<std::string>{}(
         [&]
@@ -190,11 +231,32 @@ void Application::refresh_lists()
             if (pick_ids_[i] == focused)
                 list_.set_focus(static_cast<int>(i));
 }
+int Application::pick_current_row() const
+{
+    const std::string *current = pick_ == Pick::weather       ? &config_.weather
+                                 : pick_ == Pick::view_assist ? &config_.view_assist
+                                 : pick_ == Pick::agent       ? &config_.agent
+                                 : pick_ == Pick::read_only   ? &config_.read_only
+                                                              : nullptr;
+    if (!current)
+        return 0;
+    const auto it = std::find(pick_ids_.begin(), pick_ids_.end(), *current);
+    return it == pick_ids_.end() ? 0 : static_cast<int>(it - pick_ids_.begin());
+}
 void Application::open_pick(Pick pick)
 {
     if (!ready())
         return;
     pick_ = pick;
+    if (pick == Pick::photos)
+    {
+        // The way down exists before the list is drawn from it.
+        folder_path_ = {""};
+        folder_items_.clear();
+        open(Page::pick);
+        browse_folder();
+        return;
+    }
     if (refresh_catalog)
         refresh_catalog();
     open(Page::pick);
@@ -247,6 +309,44 @@ void Application::activate_setup(int index)
     case visitors_row:
         open_pick(Pick::read_only);
         break;
+    case clock_row:
+        config_.clock = config_.clock == "auto" ? "12h" : config_.clock == "12h" ? "24h" : "auto";
+        persist();
+        break;
+    case mood_row:
+        config_.mood = !config_.mood;
+        persist();
+        break;
+    case background_row:
+    {
+        // Sky, then the folder's photos, then the View Assist device's room photo, when each can
+        // be had.
+        const bool has_photos = !config_.photos.empty();
+        const bool has_room =
+            !config_.view_assist.empty() &&
+            !text(snapshot_.states.get(config_.view_assist).attributes, "background").empty();
+        const auto &now_on = config_.background;
+        config_.background = now_on == "sky" && has_photos                         ? "photos"
+                             : (now_on == "sky" || now_on == "photos") && has_room ? "room"
+                                                                                   : "sky";
+        if (config_.background == "sky" && now_on == "sky" && !has_photos)
+            toast("Choose a photo folder first", false, 4000);
+        apply_settings();
+        break;
+    }
+    case folder_row:
+        open_pick(Pick::photos);
+        return;
+    case interval_row:
+    {
+        static constexpr int kChoices[] = {10, 20, 30, 60, 120, 300, 900};
+        int at = 0;
+        while (at < 6 && kChoices[at] < config_.photo_seconds)
+            ++at;
+        config_.photo_seconds = kChoices[(at + 1) % 7];
+        persist();
+        break;
+    }
     case motion_row:
         config_.reduced_motion = !config_.reduced_motion;
         apply_settings();
@@ -270,6 +370,11 @@ void Application::activate_setup(int index)
 }
 void Application::activate_pick(int index)
 {
+    if (pick_ == Pick::photos)
+    {
+        activate_folder(index);
+        return;
+    }
     if (index < 0 || index >= static_cast<int>(pick_ids_.size()))
         return;
     const std::string id = pick_ids_[static_cast<std::size_t>(index)];
@@ -307,11 +412,14 @@ void Application::activate_pick(int index)
         toggle(config_.appliances);
         break;
     case Pick::agent:
+        if (config_.agent != id)
+            conversation_.clear();
         config_.agent = id;
-        conversation_.clear();
         break;
     case Pick::read_only:
         config_.read_only = id;
+        break;
+    case Pick::photos:
         break;
     }
     apply_settings();
@@ -393,7 +501,7 @@ void Application::keyboard_result(const hui::ps5::KeyboardOutcome &result)
         }
         config_.host = result.text;
         persist();
-        toast("Select Connect / retry to use it");
+        toast("Choose Connect / retry to use it");
         break;
     case token_kb:
         if (result.text.empty() || result.text.find_first_of("\r\n") != std::string::npos)
@@ -403,7 +511,7 @@ void Application::keyboard_result(const hui::ps5::KeyboardOutcome &result)
         }
         config_.token = result.text;
         persist();
-        toast("Select Connect / retry to use it");
+        toast("Choose Connect / retry to use it");
         break;
     case port_kb:
     {
@@ -416,7 +524,7 @@ void Application::keyboard_result(const hui::ps5::KeyboardOutcome &result)
         }
         config_.port = static_cast<int>(value);
         persist();
-        toast("Select Connect / retry to use it");
+        toast("Choose Connect / retry to use it");
         break;
     }
     case wake_kb:

@@ -11,9 +11,13 @@ namespace lamplight
 using hui::gfx::Align;
 namespace
 {
+// "14", or "2p" on a 12-hour clock: the chart has room for little more.
 std::string two_digit_hour(std::int64_t at, const Zone &zone)
 {
-    return two(local(at, zone).hour);
+    const int hour = local(at, zone).hour;
+    if (!zone.twelve_hour)
+        return two(hour);
+    return std::to_string(hour % 12 == 0 ? 12 : hour % 12) + (hour < 12 ? "a" : "p");
 }
 // Line colour by sky, as the card's --chart-line.
 Color chart_line(Sky sky)
@@ -22,17 +26,40 @@ Color chart_line(Sky sky)
            : sky == Sky::night ? Color::rgb(0xb8c4ff)
                                : tone::warm;
 }
+// Charts from before the connection went: still useful, but not to be taken for now.
+struct DimWhile
+{
+    hui::gfx::DrawList &list;
+    bool on;
+    DimWhile(hui::gfx::DrawList &drawing, bool dimmed) : list(drawing), on(dimmed)
+    {
+        if (on)
+            list.push_opacity(0.85f);
+    }
+    ~DimWhile()
+    {
+        if (on)
+            list.pop_opacity();
+    }
+};
 } // namespace
 
+std::string Application::rain_unit() const
+{
+    return text(snapshot_.states.get(config_.weather).attributes, "precipitation_unit", "mm");
+}
 void Application::draw_weather(Paint &p) const
 {
     const auto &w = snapshot_.states.get(config_.weather);
     const auto &a = w.attributes;
     const auto state = forecast_state();
+    // Connection lost: what's still on show is from then, and says so.
+    const bool stale = !ready() && forecast_.at;
     draw_header(p, "Weather",
                 state == "failed" ? "Forecast unavailable \xC2\xB7 checked " +
                                         hhmm(forecast_failed_at_, clock_.zone)
-                                  : "",
+                : stale ? "Offline \xC2\xB7 forecast from " + hhmm(forecast_.at, clock_.zone)
+                        : "",
                 tone::warn);
     // Sunrise and sunset, beside the header's clock.
     const auto &sun = snapshot_.states.get("sun.sun");
@@ -61,15 +88,17 @@ void Application::draw_weather(Paint &p) const
     // Now: the one big number on the page; while it can't be read, the last forecast stays.
     if (!w.available())
     {
-        p.text("Not available now", size::margin, 420, size::title, tone::text, true);
-        p.paragraph("Showing the forecast from " + hhmm(forecast_.at, clock_.zone) + ".",
+        p.text(ready() ? "Not available now" : "Offline", size::margin, 420, size::title,
+               tone::text, true);
+        p.paragraph(ready() ? "Showing the forecast from " + hhmm(forecast_.at, clock_.zone) + "."
+                            : std::string("It'll update when the connection's back."),
                     size::margin, 476, size::label, 520, 42, tone::sky_muted, 3);
     }
     else
     {
         // Now: the one big number on the page.
         const float left = size::margin;
-        p.icon(condition_icon(w.state), left + 72, 352, 144, tone::warm);
+        p.icon(condition_icon(w.state, after_dark()), left + 72, 352, 144, tone::warm);
         p.number(degrees(number(field(a, "temperature"))), left + 168, 420, 196, tone::text);
         p.text(condition_label(w.state), left, 506, size::title + 4, tone::text, true, Align::left,
                520);
@@ -116,14 +145,15 @@ void Application::draw_weather(Paint &p) const
         p.failed(right, "the forecast", true);
         return;
     }
+    const DimWhile dim(p.list, stale);
     const auto hours = next_hours(forecast_.hours, now());
     const bool rain =
         std::any_of(hours.begin(), hours.end(), [](const Hour &h) { return h.rain >= 0.1; });
     const float h2 =
         p.text("Next 12 hours", right.x + 4, right.y + 30, size::label, tone::sky_muted, true);
     if (state == "ready")
-        p.text(rain ? "rain in mm" : "no rain expected", right.x + 4 + h2 + 18, right.y + 30,
-               size::caption, tone::sky_muted);
+        p.text(rain ? "rain in " + rain_unit() : std::string("no rain expected"),
+               right.x + 4 + h2 + 18, right.y + 30, size::caption, tone::sky_muted);
     const Rect chart{right.x, right.y + 52, right.w, 352};
     p.panel(chart, size::tile_radius, tone::well);
     if (state != "ready")
@@ -147,8 +177,7 @@ void Application::draw_weather(Paint &p) const
         { return chart.x + 12 + (static_cast<float>(i) + 0.5f) * column; };
         auto py = [&](double t)
         { return chart.y + 92 + static_cast<float>((1 - (t - lo) / (hi - lo)) * 96); };
-        const auto colour =
-            chart_line(sky_for(w.state, snapshot_.states.get("sun.sun").state != "below_horizon"));
+        const auto colour = chart_line(sky_for(w.state, !after_dark()));
         for (std::size_t i = 0; i < hours.size(); ++i)
         {
             const auto &h = hours[i];
@@ -197,7 +226,8 @@ void Application::draw_weather(Paint &p) const
                tone::text, true);
         p.icon(condition_icon(d.condition), box.x + 150, cy, 36, tone::sky_muted);
         if (d.rain >= 0.2)
-            p.text(one_decimal(d.rain) + " mm", box.x + 196, base, size::caption, tone::accent);
+            p.text(one_decimal(d.rain) + " " + rain_unit(), box.x + 196, base, size::caption,
+                   tone::accent);
         p.text(degrees(d.low), box.x + 430, base, size::body, tone::sky_muted, false, Align::right);
         const float bar_x = box.x + 456, bar_w = box.w - 456 - 120;
         p.list.rounded_rect({bar_x, cy - 6, bar_w, 12}, 6, Color::rgb(0xffffff, 0.14f));

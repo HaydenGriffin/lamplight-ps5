@@ -14,7 +14,9 @@ struct FixtureHome
     Snapshot snapshot;
     std::vector<std::pair<std::uint64_t, Json>> sent;
     std::uint64_t ticket = 0;
-    bool fail_forecast = false, fail_calendars = false, answer = true;
+    bool fail_forecast = false, fail_calendars = false, fail_history = false, fail_browse = false,
+         answer = true;
+    Json answers = Json::object(); // what a script answers, by "domain.service"
     WallClock clock;
 
     explicit FixtureHome(const char *path = "tests/fixture.json")
@@ -63,6 +65,24 @@ struct FixtureHome
             }
             else if (text(m, "type") == "conversation/process")
                 r.response = fixture["reply"];
+            else if (text(m, "type") == "media_source/browse_media")
+            {
+                r.ok = !fail_browse;
+                r.response = fixture["media"]["browse"];
+            }
+            else if (text(m, "type") == "media_source/resolve_media")
+                r.response = fixture["media"]["resolve"];
+            else if (text(m, "type") == "history/history_during_period")
+            {
+                // As the client would hand it on, made small.
+                r.ok = !fail_history;
+                const auto id = strings(field(m, "entity_ids")).at(0);
+                r.response =
+                    compact_history(fixture["history"], id,
+                                    field(m, "no_attributes") == true ? "" : "current_temperature");
+            }
+            else if (answers.contains(call))
+                r.response = {{"response", answers[call]}};
             if (!r.ok)
                 r.message = "Service unavailable";
             if (answer)

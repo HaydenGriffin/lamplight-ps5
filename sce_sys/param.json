@@ -2,23 +2,30 @@
   "ageLevel": {
     "default": 0
   },
-  "applicationCategoryType": 65536,
+  "applicationCategoryType": 0,
   "applicationDrmType": "free",
-  "attribute": 1644167168,
+  "attribute": 0,
   "attribute2": 0,
   "attribute3": 1048576,
   "conceptId": "99484",
-  "contentBadgeType": 2,
+  "contentBadgeType": 1,
   "contentId": "UP9000-PPSA99484_00-LAMPLIGHTPS50001",
-  "contentVersion": "01.000.000",
+  "contentVersion": "01.010.000",
   "downloadDataSize": 256,
+  "gameIntent": {
+    "permittedIntents": [
+      {
+        "intentType": "launchActivity"
+      }
+    ]
+  },
   "localizedParameters": {
     "defaultLanguage": "en-US",
     "en-US": {
       "titleName": "Lamplight"
     }
   },
-  "masterVersion": "01.00",
+  "masterVersion": "01.01",
   "pubtools": {
     "creationDate": "2026-11-02 00:00:00",
     "loudnessSnd0": "-28.00",

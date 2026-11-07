@@ -129,6 +129,8 @@ void main()
     float px = 1.0 / u_viewport.x; // virtual units per output pixel
     int shape = int(v_params.w + 0.5);
     vec4 fill = mix(v_top, v_bottom, v_t);
+    if (shape == 0 && v_extra.y > 1.5) // corner_glow: by distance from the top left corner
+        fill = mix(v_top, v_bottom, smoothstep(0.0, 1.0, length(v_local + v_half) / v_extra.z));
     vec4 color;
     if (shape == 0)
     {

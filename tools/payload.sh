@@ -11,10 +11,12 @@ out="$root/build/payload"
 mkdir -p "$out" "$root/dist"
 flags=(-std=c++20 -O2 -Wall -Wextra -Werror -fno-exceptions -DJSON_NOEXCEPTION=1 -I"$root/src")
 objects=()
-for source in payload/notify.cpp payload/system.cpp src/afterglow/ma_socket.cpp src/lamplight/json.cpp src/lamplight/clock.cpp src/lamplight/config.cpp; do
+bash tools/stubs.sh
+for source in payload/notify.cpp payload/console.cpp payload/sfo.cpp payload/system.cpp src/afterglow/ma_socket.cpp src/lamplight/json.cpp src/lamplight/clock.cpp src/lamplight/config.cpp; do
     object="$out/$(basename "$source").o"
     "$sdk/bin/prospero-clang++" "${flags[@]}" -c "$source" -o "$object"
     objects+=("$object")
 done
-"$sdk/bin/prospero-clang++" -o "$root/dist/lamplight-notify.elf" "${objects[@]}" -lSceNotification
+"$sdk/bin/prospero-clang++" -o "$root/dist/lamplight-notify.elf" "${objects[@]}" -lSceNotification \
+    -lSceSystemService -lSceUserService
 printf 'Payload: %s (%s bytes)\n' "dist/lamplight-notify.elf" "$(stat -c %s "$root/dist/lamplight-notify.elf")"

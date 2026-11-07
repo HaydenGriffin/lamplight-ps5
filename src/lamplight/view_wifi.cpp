@@ -19,8 +19,8 @@ void Application::draw_wifi(Paint &p) const
     }
     // A network to join isn't "on", so nothing here is warm (The Lamp Rule). The code sits on
     // white with at least four modules of quiet space, as phone cameras need.
-    const float side = 700;
-    const Rect code{size::margin, size::content_top + 10, side, side};
+    const float side = size::content_bottom - size::content_top;
+    const Rect code{size::margin, size::content_top, side, side};
     p.list.shadow(code.inset(-6), 40, 28, Color::rgb(0x000000, 0.45f));
     p.list.rounded_rect(code, 40, tone::white);
     const float module =

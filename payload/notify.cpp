@@ -1,13 +1,16 @@
-// Lamplight for PS5 - Background payload: Home Assistant's notifications on the PS5, over any game,
-// and the console's temperatures, free space and uptime for Home Assistant.
+// Lamplight for PS5 - Background payload: Home Assistant's notifications on the PS5, over any game;
+// the console's game, temperatures, free space and uptime for Home Assistant; and its commands.
 // Copyright (C) 2026 Hayden Griffin
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
 // Loaded at boot by the autoloader (or sent to an ELF loader). It reads
 // /data/lamplight/notify.json ({"host", "port", "token"}), connects to Home Assistant's websocket,
 // subscribes to the event lamplight_ps5_notify ({"title", "message"}) and shows each one as a
-// system notification. Once a minute it fires lamplight_ps5_status. It opens no listening port
-// to the network: the one it binds, on 127.0.0.1, only stops a second copy starting.
+// system notification, and to lamplight_ps5_command ({"command": "launch", "title_id"},
+// {"command": "lamplight"} or {"command": "rest"}). It fires lamplight_ps5_status once a minute
+// and when the game in front changes. It opens no listening port to the network: the one it
+// binds, on 127.0.0.1, only stops a second copy starting.
+#include "console.hpp"
 #include "afterglow/ma_socket.hpp"
 #include "lamplight/clock.hpp"
 #include "lamplight/config.hpp"
@@ -24,20 +27,21 @@
 
 extern "C"
 {
-int sceNotificationSend(int user, bool logged, const char *payload);
-int sceKernelGetCpuTemperature(int *celsius);
-int sceKernelGetSocSensorTemperature(int sensor, int *celsius);
+    int sceNotificationSend(int user, bool logged, const char *payload);
+    int sceKernelGetCpuTemperature(int *celsius);
+    int sceKernelGetSocSensorTemperature(int sensor, int *celsius);
 }
 
 namespace
 {
-using lamplight::Json;
-using lamplight::field;
-using lamplight::text;
 using hui::sys::monotonic_us;
+using lamplight::field;
+using lamplight::Json;
+using lamplight::text;
 constexpr int kSystemUser = 0xFE;
 constexpr const char *kConfig = "/data/lamplight/notify.json";
-// Where the system keeps a registered title's icon (it shows nothing for the install folder's copy).
+// Where the system keeps a registered title's icon (it shows nothing for the install folder's
+// copy).
 constexpr const char *kIcon = "/user/appmeta/PPSA99484/icon0.png";
 
 struct Settings
@@ -86,15 +90,21 @@ void notify(const std::string &title, const std::string &message)
     const int rc = sceNotificationSend(kSystemUser, true, toast.dump().c_str());
     hui::sys::log("[Lamplight notify] \"%s\" rc=%d", title.c_str(), rc);
 }
-Json status()
+Json status(const lamplight::console::Game &game)
 {
     Json out{{"uptime_s", monotonic_us() / 1000000}};
+    out["game"] = game.title_id.empty()
+                      ? Json()
+                      : Json{{"title_id", game.title_id},
+                             {"name", game.name.empty() ? game.title_id : game.name}};
     int celsius = 0;
     if (sceKernelGetSocSensorTemperature(0, &celsius) == 0)
         out["soc_temperature"] = celsius;
     if (sceKernelGetCpuTemperature(&celsius) == 0)
         out["cpu_temperature"] = celsius;
-    struct statfs fs{};
+    struct statfs fs
+    {
+    };
     if (statfs("/user", &fs) == 0)
         out["free_gb"] = static_cast<long long>(fs.f_bavail * fs.f_bsize / 1000000000ULL);
     return out;
@@ -110,13 +120,42 @@ bool single_instance()
     return s >= 0 && bind(s, reinterpret_cast<sockaddr *>(&address), sizeof address) == 0 &&
            listen(s, 1) == 0;
 }
+// A command from Home Assistant: open a title (or Lamplight), or rest.
+void command(const Json &data)
+{
+    const auto what = text(data, "command");
+    if (what == "launch" || what == "lamplight")
+    {
+        const auto id = what == "lamplight" ? std::string("PPSA99484") : text(data, "title_id");
+        const auto name = lamplight::console::title_name(id);
+        switch (lamplight::console::launch(id))
+        {
+        case lamplight::console::Launch::opened:
+            break;
+        case lamplight::console::Launch::busy:
+            notify("Couldn't open " + (name.empty() ? id : name), "Close the game in front first");
+            break;
+        case lamplight::console::Launch::failed:
+            notify("Couldn't open " + (name.empty() ? id : name), "The PS5 refused");
+            break;
+        }
+    }
+    else if (what == "rest")
+    {
+        if (!lamplight::console::rest())
+            notify("Couldn't go to rest mode", "This PS5 doesn't let Lamplight's payload do it");
+    }
+    else
+        hui::sys::log("[Lamplight notify] unknown command \"%s\"", what.c_str());
+}
 // One connection, until it drops. Returns false when the token was refused (no point retrying).
 bool session(const Settings &settings, std::atomic<bool> &stopping)
 {
     hui::afterglow::ma_socket::Socket socket(stopping);
-    int next = 1, subscription = 0, ping_id = 0;
+    int next = 1, subscription = 0, commands = 0, ping_id = 0;
     bool authorized = false, refused = false;
-    std::int64_t last_ping = monotonic_us(), ping_deadline = 0, next_status = 0;
+    std::int64_t last_ping = monotonic_us(), ping_deadline = 0, next_status = 0, next_game = 0;
+    lamplight::console::Game game;
     auto send = [&](Json j)
     {
         j["id"] = next++;
@@ -129,7 +168,8 @@ bool session(const Settings &settings, std::atomic<bool> &stopping)
         const auto j = Json::parse(bytes, bytes + size, nullptr, false);
         const auto type = text(j, "type");
         if (type == "auth_required")
-            return socket.send_text(Json{{"type", "auth"}, {"access_token", settings.token}}.dump());
+            return socket.send_text(
+                Json{{"type", "auth"}, {"access_token", settings.token}}.dump());
         if (type == "auth_invalid")
         {
             refused = true;
@@ -139,27 +179,34 @@ bool session(const Settings &settings, std::atomic<bool> &stopping)
         if (type == "auth_ok")
         {
             authorized = true;
-            subscription = send({{"type", "subscribe_events"}, {"event_type", "lamplight_ps5_notify"}});
+            subscription =
+                send({{"type", "subscribe_events"}, {"event_type", "lamplight_ps5_notify"}});
+            commands =
+                send({{"type", "subscribe_events"}, {"event_type", "lamplight_ps5_command"}});
             hui::sys::log("[Lamplight notify] connected to %s", settings.host.c_str());
-            return subscription != 0;
+            return subscription != 0 && commands != 0;
         }
         if (type == "pong")
             ping_deadline = 0;
         // Home Assistant lets only an administrator subscribe to an event of its own: anyone else
         // is refused here, and would otherwise sit connected receiving nothing.
-        if (type == "result" && field(j, "id") == subscription && field(j, "success") != true)
+        if (type == "result" && (field(j, "id") == subscription || field(j, "id") == commands) &&
+            field(j, "success") != true)
         {
             refused = true;
             hui::sys::log("[Lamplight notify] Home Assistant refused the subscription: the token "
                           "must be an administrator's");
             return false;
         }
+        if (type == "event" && field(j, "id") == commands)
+            command(field(field(j, "event"), "data"));
         if (type == "event" && field(j, "id") == subscription)
         {
             const auto &data = field(field(j, "event"), "data");
             const auto title = text(data, "title", text(data, "message"));
             if (!title.empty())
-                notify(title.substr(0, 200), text(data, "title").empty() ? "" : text(data, "message").substr(0, 400));
+                notify(title.substr(0, 200),
+                       text(data, "title").empty() ? "" : text(data, "message").substr(0, 400));
         }
         return true;
     };
@@ -180,10 +227,21 @@ bool session(const Settings &settings, std::atomic<bool> &stopping)
             if (!ping_id)
                 break;
         }
-        // The status, once a minute (fire_event, also an administrator's).
+        // The game in front, every five seconds: a new one is news at once.
+        if (authorized && now >= next_game)
+        {
+            auto in_front = lamplight::console::running_game();
+            if (in_front.title_id != game.title_id)
+                next_status = 0;
+            game = std::move(in_front);
+            next_game = now + 5000000;
+        }
+        // The status, once a minute and when the game changes (fire_event, an administrator's).
         if (authorized && now >= next_status)
         {
-            send({{"type", "fire_event"}, {"event_type", "lamplight_ps5_status"}, {"event_data", status()}});
+            send({{"type", "fire_event"},
+                  {"event_type", "lamplight_ps5_status"},
+                  {"event_data", status(game)}});
             next_status = now + 60000000;
         }
         hui::sys::sleep_us(50000);
@@ -215,8 +273,8 @@ int main()
         const auto started = monotonic_us();
         if (!session(settings, stopping))
         {
-            // A refused token (or a user who may not subscribe) waits five minutes rather than knocking every
-            // few seconds.
+            // A refused token (or a user who may not subscribe) waits five minutes rather than
+            // knocking every few seconds.
             hui::sys::sleep_us(300000000);
             continue;
         }

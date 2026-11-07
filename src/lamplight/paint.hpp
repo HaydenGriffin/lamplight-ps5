@@ -31,7 +31,7 @@ constexpr Color accent_ink = Color::rgb(0x04222e);
 constexpr Color ok = Color::rgb(0x7ee2a8);
 constexpr Color warn = Color::rgb(0xff9d5c);
 constexpr Color alert = Color::rgb(0xff8a80);
-constexpr Color dimmer = Color::rgb(0x000000, 0.55f);
+constexpr Color dimmer = Color::rgb(0x000000, 0.78f);
 constexpr Color toast = Color::rgb(0x0c0d10, 0.94f);
 constexpr Color error_ground = Color::rgb(0x5a1616);
 constexpr Color error_line = Color::rgb(0xff8a80, 0.45f);
@@ -110,6 +110,10 @@ class Paint
     void focus(const Rect &r, float radius) const;
     void pill(const Rect &r, const std::string &icon, const std::string &label, PillKind kind,
               bool focused, bool disabled = false, bool inside = false) const;
+    // A slider across r: a track filled up to the value and a thumb (DESIGN.md, Sliders). With an
+    // end colour the whole track is a scale from fill to end, as warm white to cool white.
+    void slider(const Rect &r, float fraction, bool focused, Color fill = tone::warm,
+                Color end = tone::clear) const;
     // The 10px warm live dot, pulsing on a 1.6 s loop (still under reduce motion).
     void live_dot(float cx, float cy, float diameter = 18) const;
     // A line through text, for a cancelled event.

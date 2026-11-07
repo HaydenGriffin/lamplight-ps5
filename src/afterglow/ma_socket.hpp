@@ -44,6 +44,8 @@ class Socket
     // Reads whatever has arrived without waiting; false when the connection is gone.
     bool tick();
     bool send_text(const std::string &text);
+    // Lamplight: Home Assistant's Assist pipeline takes the microphone as binary frames.
+    bool send_binary(const std::uint8_t *data, std::size_t size);
     std::function<bool(int, const std::uint8_t *, std::size_t)> handler;
     std::int64_t last_receive_ = 0;
     // The upgrade response's Date header ("" when none): Check my setup
