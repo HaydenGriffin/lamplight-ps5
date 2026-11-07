@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.0 (unreleased)
+## 1.1.0 (7 November 2026)
 
 - **Push-to-talk:** hold R2 on any page and speak; Home Assistant's Assist hears it through the controller's
   microphone, does it and answers on screen, continuing the conversation for five minutes.
