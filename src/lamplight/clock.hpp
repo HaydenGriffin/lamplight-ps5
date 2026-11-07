@@ -15,6 +15,8 @@ struct Zone
 {
     std::int64_t fixed_s = 0;
     std::int64_t (*lookup)(std::int64_t utc_s) = nullptr;
+    // How its times are written: "2:05 PM" rather than "14:05".
+    bool twelve_hour = false;
     std::int64_t offset_s(std::int64_t utc_ms) const;
     // The UTC instant of a local time; on a skipped hour, the instant after the gap.
     std::int64_t utc_ms(std::int64_t local_s) const;
@@ -56,8 +58,12 @@ std::string two(int value);
 std::int64_t parse_http_date(const std::string &value);
 // "2026-11-02T00:00:00+00:00": local time with its offset, as Home Assistant's services take it.
 std::string iso_local(std::int64_t utc_ms, const Zone &zone);
-// "09:05", 24-hour, as Lamplight's en-GB default.
+// "09:05", 24-hour, as Lamplight's en-GB default; "9:05 AM" in a 12-hour zone.
 std::string hhmm(std::int64_t utc_ms, const Zone &zone);
+// The clock face's digits ("9:05" or "09:05"), with "AM" or "PM" in period for a 12-hour zone.
+std::string clock_digits(std::int64_t utc_ms, const Zone &zone, std::string &period);
+// Where clocks are usually read in 12 hours, by Home Assistant's two-letter country.
+bool twelve_hour_country(const std::string &country);
 const char *weekday_name(int weekday);  // Monday
 const char *weekday_short(int weekday); // Mon
 const char *month_name(int month);      // November

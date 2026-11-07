@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #include "lamplight/application.hpp"
 #include "lamplight/assistant.hpp"
+#include "lamplight/resources.hpp"
 
 namespace lamplight
 {
@@ -10,6 +11,7 @@ namespace
 {
 constexpr std::int64_t kForecastMs = 20 * 60000, kForecastRetryMs = 60000;
 constexpr std::int64_t kAgendaMs = 10 * 60000;
+constexpr std::size_t kMaxPhotos = 2000, kMaxPhotoFolders = 64;
 // DESIGN.md, Load states: something to show beats an error.
 std::string load_state(bool loading, bool error, std::size_t count)
 {
@@ -155,6 +157,7 @@ void Application::handle(const Result &r)
     case Job::undo_timer:
     case Job::keep:
     case Job::room:
+    case Job::setting:
         if (job.job == Job::room)
             room_busy_.clear();
         if (!r.ok)
@@ -162,6 +165,83 @@ void Application::handle(const Result &r)
             busy_minutes_ = 0;
             toast("That didn't work: " + r.message, true, 5000);
         }
+        break;
+    case Job::said:
+    {
+        // A script may answer in its own words, and may refuse in them.
+        if (!r.ok)
+            speaker_move_.reset();
+        const auto words = text(response, "message");
+        if (!r.ok)
+            toast("That didn't work: " + r.message, true, 5000);
+        else if (field(response, "ok") == false)
+            toast(words.empty() ? std::string("That didn't work") : words, true, 5000);
+        // A sentence ("Warming the living room to 21° for 2 hours") stays long enough to read
+        // from the sofa.
+        else if (!words.empty())
+            toast(words, false, words.size() > 24 ? 4500 : 2500);
+        else if (!job.key.empty())
+            toast(job.key);
+        break;
+    }
+    case Job::history:
+        if (job.key != chart_.entity)
+            break;
+        chart_.loading = false;
+        chart_.failed = !r.ok;
+        if (r.ok)
+        {
+            chart_.points = history_points(r.response);
+            chart_.at = now();
+        }
+        break;
+    case Job::undoable:
+        if (r.ok)
+            offer_lamps_undo(job.key);
+        else
+            toast("That didn't work: " + r.message, true, 5000);
+        break;
+    case Job::snapshot:
+        if (waiting_action_)
+        {
+            const auto action = std::move(*waiting_action_);
+            waiting_action_.reset();
+            finish_house_action(action, r.ok);
+        }
+        break;
+    case Job::dismiss:
+        if (!r.ok)
+            toast("Couldn't dismiss it: " + r.message +
+                      (r.message.find("Unauthorized") != std::string::npos
+                           ? ". Dismissing needs an administrator's token."
+                           : ""),
+                  true, 6000);
+        break;
+    case Job::photo_list:
+        photo_busy_ = false;
+        if (r.ok)
+        {
+            for (auto &id : photo_ids(r.response))
+                if (photo_found_.size() < kMaxPhotos)
+                    photo_found_.push_back(std::move(id));
+            for (auto &[id, title] : photo_folders(r.response))
+                if (photo_walked_.size() < kMaxPhotoFolders && photo_walked_.insert(id).second)
+                    photo_walk_.push_back(std::move(id));
+        }
+        else
+            photo_walk_failed_ = true;
+        if (photo_walk_.empty())
+            finish_photo_walk();
+        break;
+    case Job::photo_url:
+        photo_busy_ = false;
+        if (r.ok && !text(r.response, "url").empty())
+            want_picture(Pic::photo, ha_url(text(r.response, "url")) + kSoftPicture, true);
+        else
+            photo_failed();
+        break;
+    case Job::folder:
+        folder_listed(r, job.key);
         break;
     case Job::ask:
         if (r.ticket == asking_)

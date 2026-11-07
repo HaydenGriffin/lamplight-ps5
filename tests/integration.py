@@ -54,6 +54,8 @@ def receive(conn):
         raise EOFError()
     if a & 15 == 10:
         return {}
+    if a & 15 == 2:
+        return {'binary': payload}
     assert a & 15 == 1
     return json.loads(payload)
 
@@ -100,9 +102,40 @@ def session(conn):
         return
     send(conn, {'type': 'auth_ok'})
     states = fixture['states']['a']
+    # Push-to-talk: each run by its handler byte (7, or 9 for one whose start is held back until the
+    # next message, as a slow server would), the samples it has heard, and how many runs have ended.
+    runs, heard, ended, held = {}, {}, 0, 0
     while not stop.is_set():
         message = receive(conn)
         if not message:
+            continue
+        if held:
+            send(conn, {'id': held, 'type': 'event', 'event': {
+                'type': 'run-start', 'data': {'runner_data': {'stt_binary_handler_id': 9}}}})
+            held = 0
+        if 'binary' in message:
+            data = message['binary']
+            handler = data[0]
+            assert handler in runs, data[:1]
+            if len(data) > 1:
+                heard[handler] += (len(data) - 1) // 2
+                continue
+            # The handler byte alone: the audio has ended. A short run (one cut off by a new one)
+            # hears nothing; a full second is heard. The conversation id counts the runs ended.
+            ended += 1
+            run = runs.pop(handler)
+            if heard.pop(handler) != 16000:
+                send(conn, {'id': run, 'type': 'event',
+                            'event': {'type': 'error', 'data': {'code': 'stt-no-text-recognized',
+                                                                'message': 'No text recognized'}}})
+                continue
+            for event in ({'type': 'stt-start', 'data': {}},
+                          {'type': 'stt-end', 'data': {'stt_output': {'text': ' what time is it '}}},
+                          {'type': 'intent-end', 'data': {'intent_output': {
+                              'conversation_id': 'talk-%d' % ended,
+                              'response': {'speech': {'plain': {'speech': "It's five past two."}}}}}},
+                          {'type': 'run-end', 'data': None}):
+                send(conn, {'id': run, 'type': 'event', 'event': event})
             continue
         kind, ident = message['type'], message['id']
         answer = {'id': ident, 'type': 'result', 'success': True, 'result': None}
@@ -129,9 +162,27 @@ def session(conn):
             if message['service_data'].get('timer_id') == 'drop':
                 # Drop before acknowledgement. This command must not be replayed.
                 return
+        elif kind == 'get_config':
+            answer['result'] = {'country': 'US', 'time_zone': 'America/New_York'}
+        elif kind == 'assist_pipeline/run':
+            assert message['start_stage'] == 'stt' and message['end_stage'] == 'intent'
+            assert message['input'] == {'sample_rate': 16000}
+            send(conn, answer)
+            handler = 9 if message.get('conversation_id') == 'slow' else 7
+            runs[handler], heard[handler] = ident, 0
+            if handler == 9:
+                held = ident
+            else:
+                send(conn, {'id': ident, 'type': 'event', 'event': {
+                    'type': 'run-start', 'data': {'runner_data': {'stt_binary_handler_id': 7}}}})
+            continue
         elif kind == 'conversation/process':
             commands.append(message)
             answer['result'] = fixture['reply']
+        elif kind == 'history/history_during_period':
+            # A day's readings every 30 seconds: more than a frame should carry.
+            answer['result'] = {message['entity_ids'][0]: [
+                {'s': str(20 + i % 5), 'lu': 1800000000 + i * 30} for i in range(2880)]}
         elif kind == 'ping':
             send(conn, {'id': ident, 'type': 'pong'})
             continue
@@ -171,4 +222,4 @@ finally:
 assert not errors, errors
 assert connections >= 2
 assert sum(c.get('service_data', {}).get('timer_id') == 'drop' for c in commands) == 1, 'a dropped command was replayed'
-print('fake Home Assistant: auth, large get_states, fragmented state, forecast response, assistant, resubscribe, reconnect and no replay passed')
+print('fake Home Assistant: auth, large get_states, fragmented state, forecast response, assistant, chart history, push-to-talk, resubscribe, reconnect and no replay passed')

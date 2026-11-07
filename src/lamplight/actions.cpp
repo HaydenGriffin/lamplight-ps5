@@ -4,6 +4,7 @@
 #include "lamplight/application.hpp"
 #include "lamplight/room.hpp"
 #include <algorithm>
+#include <cmath>
 
 namespace lamplight
 {
@@ -107,6 +108,21 @@ void Application::update_timers(const hui::InputFrame &input)
             return;
         }
 }
+// What Cross does on what has the focus, in words ("" for nothing).
+std::string Application::timer_press_words() const
+{
+    int index = timer_row_[timer_column_];
+    for (const auto &s : timer_slots())
+        if (s.column == timer_column_ && index-- == 0)
+        {
+            if (s.appliance)
+                return "";
+            if (s.timer_id.empty())
+                return "Start " + std::to_string(s.minutes) + " min";
+            return armed_timer_ == s.timer_id ? "Confirm" : "Cancel";
+        }
+    return "";
+}
 void Application::start_timer(int minutes)
 {
     if (config_.view_assist.empty())
@@ -186,6 +202,9 @@ void Application::update_help(const hui::InputFrame &input)
     {
         if (read_only())
             toast("Visitors mode is on, so nothing runs from here", true, 4000);
+        // Before the typing, not after it.
+        else if (!ready())
+            toast("Not connected to Home Assistant", true, 5000);
         else
             request_keyboard(5);
         return;
@@ -312,12 +331,106 @@ int spatial_next(const std::vector<hui::gfx::Rect> &rects, int from, Direction n
     return best;
 }
 } // namespace
+std::string Application::slot_entity(const RoomSlot &slot) const
+{
+    const auto &room = current_room();
+    if (slot.kind == RoomSlot::Kind::play_pause || slot.kind == RoomSlot::Kind::next)
+        return room.media;
+    const auto &list = slot.kind == RoomSlot::Kind::action ? room.actions : room.tiles;
+    if (slot.index < 0 || slot.index >= static_cast<int>(list.size()))
+        return "";
+    return list[static_cast<std::size_t>(slot.index)].entity;
+}
+std::string Application::slot_name(const RoomSlot &slot) const
+{
+    const auto &room = current_room();
+    if (slot.kind == RoomSlot::Kind::tile && slot.index >= 0 &&
+        slot.index < static_cast<int>(room.tiles.size()))
+        return room.tiles[static_cast<std::size_t>(slot.index)].name;
+    return "";
+}
+std::string Application::slot_icon(const RoomSlot &slot) const
+{
+    const auto &room = current_room();
+    if (slot.kind == RoomSlot::Kind::tile && slot.index >= 0 &&
+        slot.index < static_cast<int>(room.tiles.size()))
+        return room.tiles[static_cast<std::size_t>(slot.index)].icon;
+    return "";
+}
+// Where a room opens: on its first thing rather than Pause, where a stray Cross stops the music.
+int Application::first_room_focus() const
+{
+    const auto slots = room_slots();
+    const auto it = std::find_if(slots.begin(), slots.end(), [](const RoomSlot &slot)
+                                 { return slot.kind == RoomSlot::Kind::tile; });
+    return it == slots.end() ? 0 : static_cast<int>(it - slots.begin());
+}
+// What Cross does here, in words: the hint's label ("" for nothing).
+const char *Application::press_words(const RoomSlot &slot) const
+{
+    if (slot.kind == RoomSlot::Kind::next)
+        return "Next";
+    if (slot.kind == RoomSlot::Kind::action)
+        return "Run";
+    const auto entity = slot_entity(slot);
+    const auto &state = snapshot_.states.get(entity);
+    const auto domain = domain_of(entity);
+    if (slot.kind == RoomSlot::Kind::play_pause)
+        return music_session(config_.speakers, snapshot_.states, entity).state.state == "playing"
+                   ? "Pause"
+                   : "Play";
+    if (domain == "media_player")
+        return state.state == "playing" ? "Pause" : "Play";
+    if (domain == "camera")
+        return "Watch";
+    if (domain == "scene" || domain == "script")
+        return "Run";
+    if (press_action(entity))
+        return domain == "cover" ? (is_on(entity, state) ? "Close" : "Open")
+                                 : (is_on(entity, state) ? "Turn off" : "Turn on");
+    if (!state.available() || controls_for(entity, state).empty())
+        return "";
+    return domain == "sensor" ? "History" : "Controls";
+}
+bool Application::slot_confirms(const RoomSlot &slot) const
+{
+    const auto &room = current_room();
+    return slot.kind == RoomSlot::Kind::tile && slot.index >= 0 &&
+           slot.index < static_cast<int>(room.tiles.size()) &&
+           room.tiles[static_cast<std::size_t>(slot.index)].confirm;
+}
+std::optional<Control> Application::slot_level(const RoomSlot &slot) const
+{
+    const auto &tiles = current_room().tiles;
+    if (slot.kind != RoomSlot::Kind::tile || slot.index < 0 ||
+        slot.index >= static_cast<int>(tiles.size()))
+        return std::nullopt;
+    const auto &tile = tiles[static_cast<std::size_t>(slot.index)];
+    const auto &state = snapshot_.states.get(tile.entity);
+    if (tile.confirm || !state.available() || plan_runs(tile.entity, tile.boosts))
+        return std::nullopt;
+    return primary_slider(tile.entity, state);
+}
 void Application::update_room(const hui::InputFrame &input)
 {
+    // Square: the next room, from its first control.
+    if (input.is_pressed(Action::west) && config_.rooms.size() > 1)
+    {
+        room_index_ = (room_index_ + 1) % static_cast<int>(config_.rooms.size());
+        room_focus_ = first_room_focus();
+        room_armed_ = -1;
+        room_hold_ = -1;
+        return;
+    }
     const auto slots = room_slots();
     if (slots.empty())
         return;
     room_focus_ = std::clamp(room_focus_, 0, static_cast<int>(slots.size()) - 1);
+    if (room_hold_ >= 0)
+    {
+        finish_room_hold(input, slots);
+        return;
+    }
     if (input.nav != Direction::none)
     {
         std::vector<hui::gfx::Rect> rects;
@@ -328,18 +441,85 @@ void Application::update_room(const hui::InputFrame &input)
             room_armed_ = -1;
         room_focus_ = next;
     }
-    if (input.is_pressed(Action::confirm))
-        press_room(slots[static_cast<std::size_t>(room_focus_)]);
+    const auto &slot = slots[static_cast<std::size_t>(room_focus_)];
+    // Triangle: this thing's controls, or every lamp in the room from something without any.
+    if (input.is_pressed(Action::north))
+    {
+        if (!open_slot_sheet(slot))
+            open_lamps_sheet();
+        return;
+    }
+    adjust_with_right_stick(input, slot);
+    if (!input.is_pressed(Action::confirm))
+        return;
+    if (slot.kind == RoomSlot::Kind::tile)
+    {
+        const auto entity = slot_entity(slot);
+        const auto &state = snapshot_.states.get(entity);
+        if (domain_of(entity) == "camera")
+        {
+            if (state.available())
+                watch_camera(entity,
+                             slot_name(slot).empty() ? state.name(entity) : slot_name(slot));
+            return;
+        }
+        const bool controls = state.available() && !controls_for(entity, state).empty();
+        // Something that can be pressed waits to see whether this is a tap or a hold (the tablets'
+        // 500 ms); something that can't, a thermostat, opens its sheet at once.
+        if (controls && press_action(entity))
+        {
+            room_hold_ = room_focus_;
+            room_hold_s_ = 0;
+            return;
+        }
+        if (controls)
+        {
+            open_slot_sheet(slot);
+            return;
+        }
+    }
+    press_room(slot);
+}
+void Application::finish_room_hold(const hui::InputFrame &input, const std::vector<RoomSlot> &slots)
+{
+    const int at = room_hold_;
+    const bool let_go = !input.is_held(Action::confirm);
+    if (!let_go && room_hold_s_ < kRoomHoldS)
+        return;
+    room_hold_ = -1;
+    if (at >= static_cast<int>(slots.size()))
+        return;
+    const auto &slot = slots[static_cast<std::size_t>(at)];
+    if (let_go)
+        press_room(slot);
+    else
+        open_slot_sheet(slot);
+}
+// The right stick sets the focused thing's main level straight from the page.
+void Application::adjust_with_right_stick(const hui::InputFrame &input, const RoomSlot &slot)
+{
+    if (std::fabs(input.stick2_y) < 0.2f)
+        return;
+    const auto control = slot_level(slot);
+    if (!control)
+        return;
+    // Full over, the whole range in two seconds; up is more.
+    const double by = -static_cast<double>(input.stick2_y) * (control->max - control->min) * 0.5 *
+                      static_cast<double>(frame_dt_);
+    adjust(*control, shown_value(*control) + by);
 }
 void Application::press_room(const RoomSlot &slot)
 {
-    const auto &room = config_.room_page;
+    const auto &room = current_room();
     std::optional<Request> request;
     std::string entity, label;
     bool confirm = false;
-    if (slot.kind == RoomSlot::Kind::play_pause || slot.kind == RoomSlot::Kind::next)
+    const bool media = slot.kind == RoomSlot::Kind::play_pause || slot.kind == RoomSlot::Kind::next;
+    // Playing with the group, the room's own buttons drive the group, as on the tablets.
+    const auto session = music_session(config_.speakers, snapshot_.states, room.media);
+    if (media)
     {
-        entity = room.media;
+        entity = session.target;
         request =
             service("media_player",
                     slot.kind == RoomSlot::Kind::next ? "media_next_track" : "media_play_pause",
@@ -358,7 +538,7 @@ void Application::press_room(const RoomSlot &slot)
     }
     // A press does what the control shows: nothing while it is sending, unavailable, or (Next)
     // with nothing playing.
-    const auto &state = snapshot_.states.get(entity);
+    const auto &state = media ? session.state : snapshot_.states.get(entity);
     if (!request || room_busy_ == entity || !state.available() ||
         (slot.kind == RoomSlot::Kind::next && state.state != "playing"))
         return;
@@ -375,6 +555,8 @@ void Application::press_room(const RoomSlot &slot)
         toast("Not connected to Home Assistant", true, 5000);
         return;
     }
+    if (domain_of(entity) != "media_player")
+        drop_settings(entity);
     room_busy_ = entity;
     room_busy_until_ = now() + 8000;
     if (slot.kind == RoomSlot::Kind::action)

@@ -11,17 +11,21 @@ void Application::draw_setup(Paint &p) const
 {
     std::string subtitle = snapshot_.ready ? "Connected to Home Assistant" : snapshot_.status;
     if (page_ == Page::pick)
-        subtitle = pick_ == Pick::calendars || pick_ == Pick::appliances
-                       ? "Select to turn each one on or off"
-                       : "Select one";
+        subtitle =
+            pick_ == Pick::calendars || pick_ == Pick::appliances
+                ? "Choose to turn each one on or off"
+            : pick_ == Pick::photos
+                ? (config_.photos.empty() ? std::string("Open a folder, then use it")
+                                          : "Now using: " + photo_folder_name(config_.photos))
+                : "Choose one";
     if (page_ == Page::quit)
-        subtitle = "Lamplight keeps nothing running once it's closed";
+        subtitle = "It stops updating until you open it again";
     draw_header(p, page_title(), subtitle,
                 page_ == Page::setup && !snapshot_.ready ? tone::warn : tone::muted);
     const Rect side{1200, size::content_top, 1920 - size::margin - 1200,
                     size::content_bottom - size::content_top};
-    p.panel({size::margin - 16, size::content_top - 16, 1060 + 32, side.h + 32}, size::tile_radius,
-            tone::panel);
+    p.panel({size::margin, size::content_top, side.x - 28 - size::margin, side.h},
+            size::tile_radius, tone::panel);
     hui::ui::Canvas canvas{p.list, fonts_.kit, 0, time_};
     list_.draw(canvas);
     p.panel(side);
@@ -30,12 +34,14 @@ void Application::draw_setup(Paint &p) const
     {
         heading = "Start here";
         body = "Enter Home Assistant's local IPv4 address and a long-lived access token from your "
-               "profile, then Connect. Then choose what each page shows.\n\nSettings stay on this "
+               "profile, then Connect. Backgrounds and photos are just below, then what each page "
+               "shows.\n\nSettings stay on this "
                "PS5, token and Wi-Fi password included. Local HTTP only.";
     }
     else if (page_ == Page::pick)
     {
-        heading = pick_options().empty() ? "Nothing found" : "From Home Assistant";
+        heading = pick_options().empty() && pick_ != Pick::photos ? "Nothing found"
+                                                                  : "From Home Assistant";
         switch (pick_)
         {
         case Pick::weather:
@@ -60,10 +66,16 @@ void Application::draw_setup(Paint &p) const
             body = "While this switch is on (visitors in, say), Help shows its examples but runs "
                    "nothing.";
             break;
+        case Pick::photos:
+            body = "Home Assistant's media: its local folders, and Immich and the like through "
+                   "their integrations. The slideshow, the resting clock and the Photos background "
+                   "use this folder and the folders inside it: JPEG or PNG, at most 4096 pixels a "
+                   "side.";
+            break;
         }
     }
     else
-        body = "Close returns to the PS5 home screen. Your settings are kept.";
+        body = "Your settings are kept. Music, timers and the house carry on as they are.";
     p.text(heading, side.x + 40, side.y + 70, size::body, tone::text, true);
     p.paragraph(body, side.x + 40, side.y + 124, size::label, side.w - 80, 44, tone::muted, 12);
     if (page_ == Page::setup && !storage_status_.empty())

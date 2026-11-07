@@ -4,6 +4,7 @@
 #include "core/save_file.hpp"
 #include "gfx/renderer.hpp"
 #include "lamplight/application.hpp"
+#include "lamplight/microphone.hpp"
 #include "lamplight/resources.hpp"
 #include "platform/ps5/display_egl.hpp"
 #include "platform/ps5/pad.hpp"
@@ -14,7 +15,7 @@
 
 namespace
 {
-GLuint upload(const lamplight::Picture &picture)
+GLuint upload(int width, int height, const std::vector<std::uint8_t> &rgba)
 {
     GLuint texture = 0;
     glGenTextures(1, &texture);
@@ -24,8 +25,8 @@ GLuint upload(const lamplight::Picture &picture)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, picture.width, picture.height, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, picture.rgba.data());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 rgba.data());
     return texture;
 }
 } // namespace
@@ -88,9 +89,24 @@ int main()
     app.save = [&](const lamplight::Config &c) { resources.save(c); };
     app.reconnect = [&](const lamplight::Config &c, std::set<std::string> watched)
     { client.start(c, std::move(watched)); };
-    app.watch = [&](std::set<std::string> watched) { client.watch(std::move(watched)); };
+    app.watch = [&](const lamplight::Config &c, std::set<std::string> watched)
+    { client.watch(c, std::move(watched)); };
     app.refresh_catalog = [&] { client.refresh_catalog(); };
     app.request_picture = [&](const std::string &url) { resources.request_picture(url); };
+    lamplight::Microphone microphone;
+    app.listen = [&](const std::string &pipeline, const std::string &conversation)
+    { return client.listen(pipeline, conversation); };
+    app.open_microphone = [&]
+    {
+        return microphone.start(pad.user(), [&](const std::int16_t *samples, std::size_t count)
+                                { client.audio(samples, count); });
+    };
+    app.close_microphone = [&]
+    {
+        microphone.stop();
+        client.end_audio();
+    };
+    app.microphone_level = [&] { return microphone.level(); };
     client.start(config, app.watched());
     std::int64_t previous = sys::monotonic_us(), mirror = 0;
     std::int64_t previous_wall = lamplight::wall_clock().utc_ms;
@@ -185,13 +201,19 @@ int main()
         lamplight::Picture picture;
         while (resources.take_picture(picture))
         {
-            GLuint texture = 0;
+            GLuint texture = 0, soft = 0;
             if (picture.ok)
             {
-                texture = upload(picture);
+                texture = upload(picture.width, picture.height, picture.rgba);
                 textures.push_back(texture);
+                if (!picture.soft.empty())
+                {
+                    soft = upload(picture.soft_width, picture.soft_height, picture.soft);
+                    textures.push_back(soft);
+                }
             }
-            app.picture(picture.url, texture, picture.width, picture.height);
+            app.picture(picture.url, texture, picture.width, picture.height, soft,
+                        picture.brightness);
         }
         for (auto texture : app.take_released())
         {
@@ -212,6 +234,7 @@ int main()
         }
     }
     keyboard.abort();
+    microphone.stop();
     client.stop();
     resources.stop();
     pad.reset_light_bar();

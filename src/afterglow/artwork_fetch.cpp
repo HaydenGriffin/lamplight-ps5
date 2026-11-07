@@ -191,7 +191,7 @@ bool fetch_image(const std::string &url, const std::function<bool()> &cancelled,
 }
 
 bool decode_image(const std::vector<std::uint8_t> &body, std::vector<std::uint8_t> &rgba,
-                  int &width, int &height)
+                  int &width, int &height, int max_side)
 {
     // Reject unsupported formats and oversized allocations before invoking the decoder.
     const bool jpeg = body.size() >= 3 && body[0] == 0xff && body[1] == 0xd8 && body[2] == 0xff;
@@ -200,7 +200,7 @@ bool decode_image(const std::vector<std::uint8_t> &body, std::vector<std::uint8_
     int channels = 0;
     const int size = static_cast<int>(body.size());
     if ((!jpeg && !png) || !stbi_info_from_memory(body.data(), size, &width, &height, &channels) ||
-        width <= 0 || height <= 0 || width > 2048 || height > 2048)
+        width <= 0 || height <= 0 || width > max_side || height > max_side)
         return false;
     auto *pixels = stbi_load_from_memory(body.data(), size, &width, &height, &channels, 4);
     if (!pixels)

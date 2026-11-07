@@ -143,18 +143,24 @@ void Application::draw_agenda_day(Paint &p, const Rect &r, const char *label, st
     }
     const int first = agenda_first(column);
     const float top = r.y + kListTop, bottom = r.y + r.h - kListBottomPad;
-    const Rect clip{r.x, top - 8, r.w, bottom - top + 8};
+    // With more than fits, the list stops short and "More" has the strip below it to itself.
+    float end = top;
+    bool more = false;
+    for (std::size_t i = static_cast<std::size_t>(first); i < rows.size() && !more; ++i)
+    {
+        more = end + rows[i].height > bottom + 1;
+        end += rows[i].height + kGap;
+    }
+    const float list_bottom = more ? bottom - 30 : bottom;
+    const Rect clip{r.x, top - 8, r.w, list_bottom - top + 8};
     p.list.push_clip(clip);
     float y = top;
-    bool more = false;
     for (std::size_t i = static_cast<std::size_t>(first); i < rows.size(); ++i)
     {
         const auto &row = rows[i];
-        if (y + row.height > bottom + 1)
-        {
-            more = true;
+        // One that doesn't fit is cut off under the fade, so the list plainly goes on.
+        if (y > list_bottom - 40)
             break;
-        }
         const auto &e = row.event;
         const Rect box{r.x + 20, y, r.w - 40, row.height};
         const auto *choice = calendar_choice(config_.calendars, e.calendar);
@@ -191,7 +197,7 @@ void Application::draw_agenda_day(Paint &p, const Rect &r, const char *label, st
             if (row.live)
             {
                 p.wash(box, size::small_radius);
-                p.list.bordered_rect(box, size::small_radius, tone::clear, 3, tone::warm);
+                p.list.rounded_rect(box, size::small_radius, tone::warm_soft);
                 p.live_dot(box.x + 30, box.y + 38);
                 p.text("Now", box.x + 50, box.y + 50, size::button, tone::warm, true);
             }
@@ -227,13 +233,13 @@ void Application::draw_agenda_day(Paint &p, const Rect &r, const char *label, st
         p.icon("chevron-up", r.x + r.w - 52, r.y + 54, 40, tone::muted);
     if (more)
     {
-        p.list.gradient_rect({r.x, bottom - 70, r.w, 70 + kListBottomPad}, size::tile_radius,
-                             tone::panel_solid.with_alpha(0), tone::panel_solid.with_alpha(0.92f));
+        p.list.gradient_rect({r.x + 20, list_bottom - 56, r.w - 40, 56}, 0,
+                             tone::panel_solid.with_alpha(0), tone::panel_solid.with_alpha(0.96f));
         p.icon("chevron-down", r.cx() - 40, bottom - 4, 36, tone::muted);
         p.text("More", r.cx() - 16, bottom + 6, size::caption, tone::muted);
     }
     const bool scrollable = first > 0 || more;
     if (scrollable && column == agenda_column_)
-        p.list.bordered_rect(r, size::tile_radius, tone::clear, 3, tone::accent.with_alpha(0.7f));
+        p.focus(r, size::tile_radius);
 }
 } // namespace lamplight

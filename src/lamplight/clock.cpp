@@ -254,10 +254,32 @@ std::string iso_local(std::int64_t utc_ms, const Zone &zone)
            two(static_cast<int>(magnitude / 3600)) + ":" +
            two(static_cast<int>(magnitude % 3600 / 60));
 }
-std::string hhmm(std::int64_t utc_ms, const Zone &zone)
+std::string clock_digits(std::int64_t utc_ms, const Zone &zone, std::string &period)
 {
     const auto at = local(utc_ms, zone);
-    return two(at.hour) + ":" + two(at.minute);
+    if (!zone.twelve_hour)
+    {
+        period.clear();
+        return two(at.hour) + ":" + two(at.minute);
+    }
+    period = at.hour < 12 ? "AM" : "PM";
+    const int hour = at.hour % 12 == 0 ? 12 : at.hour % 12;
+    return std::to_string(hour) + ":" + two(at.minute);
+}
+std::string hhmm(std::int64_t utc_ms, const Zone &zone)
+{
+    std::string period;
+    const auto digits = clock_digits(utc_ms, zone, period);
+    return period.empty() ? digits : digits + " " + period;
+}
+bool twelve_hour_country(const std::string &country)
+{
+    static const char *const twelve[] = {"US", "CA", "AU", "NZ", "IN", "PH", "PK", "BD",
+                                         "EG", "SA", "MY", "CO", "MX", "SV", "HN", "NI"};
+    for (const auto *c : twelve)
+        if (country == c)
+            return true;
+    return false;
 }
 const char *weekday_name(int weekday)
 {

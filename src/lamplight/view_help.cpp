@@ -12,8 +12,9 @@ void Application::draw_help(Paint &p) const
 {
     const bool still = read_only();
     draw_header(p, "What can I say?",
-                still
-                    ? "Start with “" + config_.wake_phrase + "”, then say it"
+                still ? "Start with “" + config_.wake_phrase + "”, then say it"
+                : !ready()
+                    ? std::string("Examples run once Home Assistant is back")
                     : "Choose an example to try it for real, or press Triangle to type a question",
                 tone::muted);
     const auto &cats = config_.help();
@@ -31,10 +32,14 @@ void Application::draw_help(Paint &p) const
         const Rect r{size::margin, cat_top + static_cast<float>(i - first) * (cat_h + cat_gap),
                      cat_w, cat_h};
         const bool selected = i == help_category_;
-        p.list.rounded_rect(r, cat_h / 2, selected ? tone::accent : tone::raised);
-        const Color ink = selected ? tone::accent_ink : tone::text;
+        // The chosen one is quiet, as on the sheets; only the focus ring is loud.
+        p.list.rounded_rect(r, cat_h / 2, selected ? tone::accent.with_alpha(0.2f) : tone::raised);
+        const Color ink = selected ? tone::accent : tone::text;
         p.icon(c.icon.empty() ? "comment-text-outline" : c.icon, r.x + 56, r.cy(), 44, ink);
-        p.text(c.name, r.x + 100, r.cy() + 12, size::body, ink, true, Align::left, r.w - 130);
+        p.text(c.name, r.x + 100, r.cy() + 12, size::body, ink, true, Align::left,
+               r.w - (selected ? 170 : 130));
+        if (selected)
+            p.icon("check", r.x + r.w - 52, r.cy(), 36, ink);
         if (selected && help_column_ == 0)
             p.focus(r, cat_h / 2);
     }
@@ -86,7 +91,7 @@ void Application::draw_help(Paint &p) const
             if (asking)
                 p.pill(go, "", "Asking\xE2\x80\xA6", PillKind::rest, false, false, true);
             else if (armed)
-                p.pill(go, "", "Press again", PillKind::danger, false);
+                p.pill(go, "", "Confirm", PillKind::danger, false);
             else
                 p.pill(go, "play", "Try it", PillKind::lead, false);
         }

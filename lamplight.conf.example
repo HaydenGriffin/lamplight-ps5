@@ -17,21 +17,79 @@
   "wake_phrase": "Okay Nabu",
   "room": "living room",
   "read_only_entity": "",
-  "room_page": {
-    "name": "Living room",
-    "icon": "mdi:sofa-outline",
-    "media": "media_player.living_room_speaker",
-    "tiles": [
-      {"entity": "light.living_room", "name": "Main lights", "icon": "mdi:ceiling-light"},
-      {"entity": "light.floor_lamp", "name": "Floor lamp", "icon": "mdi:floor-lamp"},
-      {"entity": "climate.living_room", "name": "Radiator"}
-    ],
+  "rooms": [
+    {
+      "name": "Living room",
+      "icon": "mdi:sofa-outline",
+      "media": "media_player.living_room_speaker",
+      "photo": "/local/rooms/living_room.jpg",
+      "light": "light.living_room",
+      "scenes": [
+        {"name": "Bright", "icon": "mdi:brightness-7", "brightness": 100, "kelvin": 4000},
+        {"name": "Relax", "icon": "mdi:sofa-outline", "brightness": 45, "kelvin": 2700},
+        {"name": "Cinema", "icon": "mdi:movie-open-outline", "service": "script.cinema_mode_toggle", "entity": "input_boolean.cinema_mode"},
+        {"name": "Off", "icon": "mdi:power", "off": true}
+      ],
+      "tiles": [
+        {"entity": "light.living_room", "name": "Main lights", "icon": "mdi:ceiling-light"},
+        {"entity": "light.floor_lamp", "name": "Floor lamp", "icon": "mdi:floor-lamp"},
+        {
+          "entity": "climate.living_room", "name": "Radiator", "sensor": "sensor.living_room_temperature",
+          "boosts": [
+            {"name": "21° for 2 hours", "icon": "mdi:fire", "service": "script.warm_room", "data": {"room": "living_room", "temperature": 21, "minutes": 120}, "response": true},
+            {"name": "Stop", "icon": "mdi:radiator-off", "service": "script.warm_room", "data": {"room": "living_room", "temperature": 0, "minutes": 0}, "response": true}
+          ]
+        },
+        {"entity": "camera.back_garden", "name": "Garden"}
+      ],
+      "actions": [
+        {"entity": "script.movie_time", "name": "Movie time", "icon": "mdi:movie-open-outline"},
+        {"entity": "script.lights_off", "name": "Lights off", "icon": "mdi:lightbulb-off-outline"},
+        {"entity": "script.good_night", "name": "Good night", "icon": "mdi:power-sleep", "confirm": true}
+      ]
+    },
+    {
+      "name": "Kitchen",
+      "icon": "mdi:silverware-fork-knife",
+      "tiles": [
+        {"entity": "light.kitchen", "name": "Ceiling"},
+        {"entity": "sensor.kitchen_temperature", "name": "Temperature"}
+      ]
+    }
+  ],
+  "house": {
+    "undo_lights": "light.all_lights",
     "actions": [
-      {"entity": "script.movie_time", "name": "Movie time", "icon": "mdi:movie-open-outline"},
-      {"entity": "script.lights_off", "name": "Lights off", "icon": "mdi:lightbulb-off-outline"},
-      {"entity": "script.good_night", "name": "Good night", "icon": "mdi:power-sleep", "confirm": true}
+      {"name": "Everything off", "icon": "mdi:power", "service": "script.everything_off", "confirm": true, "undo": true},
+      {"name": "Good night", "icon": "mdi:power-sleep", "service": "script.good_night", "confirm": true, "undo": true}
+    ],
+    "modes": [
+      {
+        "entity": "input_boolean.guests", "name": "Guests", "icon": "mdi:account-multiple", "about": "Personal things hidden, prompts quiet",
+        "on": {"service": "script.guests_on"}, "off": {"service": "script.guests_off"}, "confirm_off": true
+      },
+      {"entity": "input_boolean.cinema", "name": "Cinema", "icon": "mdi:movie-open-outline", "about": "Lights down for a film"},
+      {"entity": "input_boolean.away", "name": "Away", "icon": "mdi:home-export-outline", "about": "Everything off while you are out"},
+      {"entity": "input_boolean.night", "name": "Night mode", "icon": "mdi:weather-night", "about": "Night lights and quiet notices"}
     ]
   },
+  "speakers": {
+    "group": {"name": "Everywhere", "player": "media_player.all_speakers"},
+    "sleep_script": "script.music_sleep_timer",
+    "rooms": [
+      {"name": "Living room", "player": "media_player.living_room_speaker", "sleep_timer": "timer.music_sleep_living_room"},
+      {"name": "Kitchen", "player": "media_player.kitchen_speaker", "sleep_timer": "timer.music_sleep_kitchen"}
+    ]
+  },
+  "doorbell": {"trigger": "binary_sensor.front_door_ding", "camera": "camera.front_door", "name": "Front door"},
+  "photos": "media-source://media_source/local/photos",
+  "photo_seconds": 60,
+  "background": "sky",
+  "mood": true,
+  "notices": {"entity": "sensor.house_notices", "dismiss_event": "house_notice_dismiss"},
+  "clock": "auto",
+  "pipeline": "",
+  "settings_entity": "sensor.lamplight_ps5",
   "reduced_motion": false,
   "vibration": false
 }

@@ -32,6 +32,12 @@ bool is_digit(const std::string &s, std::size_t at)
 {
     return s[at] >= '0' && s[at] <= '9';
 }
+// A time's digits keep their width, so a running one doesn't jitter; a still number (12 degrees)
+// sets naturally rather than with gaps.
+bool is_time(const std::string &s)
+{
+    return s.find(':') != std::string::npos;
+}
 } // namespace
 
 std::string icon_glyph(const std::string &name)
@@ -80,7 +86,7 @@ float Paint::number_width(const std::string &s, float sz, bool light) const
     for (std::size_t i = 0; i < s.size();)
     {
         const auto n = utf8_length(static_cast<unsigned char>(s[i]));
-        width += is_digit(s, i) ? cell : f.measure(s.substr(i, n), sz);
+        width += is_digit(s, i) && is_time(s) ? cell : f.measure(s.substr(i, n), sz);
         i += n;
     }
     return width;
@@ -98,7 +104,7 @@ float Paint::number(const std::string &s, float x, float baseline, float sz, Col
     {
         const auto n = utf8_length(static_cast<unsigned char>(s[i]));
         const auto part = s.substr(i, n);
-        if (is_digit(s, i))
+        if (is_digit(s, i) && is_time(s))
         {
             hui::ui::text(list, f, part, pen + cell / 2, baseline, sz, colour, Align::center);
             pen += cell;
@@ -164,11 +170,8 @@ void Paint::panel(const Rect &r, float radius, Color fill) const
 void Paint::wash(const Rect &r, float radius, Color colour) const
 {
     // radial-gradient(120% 100% at 0% 0%, warm .30, transparent 62%): light spilling from a
-    // point at the corner, clipped to the tile.
-    list.push_clip(r);
-    list.glow({r.x - 4, r.y - 4, 8, 8}, 4, std::max(r.w, r.h) * 0.62f, colour.with_alpha(0.66f));
-    list.pop_clip();
-    (void)radius;
+    // point at the corner, inside the tile's rounded shape.
+    list.corner_glow(r, radius, std::max(r.w, r.h) * 0.62f, colour.with_alpha(0.66f));
 }
 void Paint::focus(const Rect &r, float radius) const
 {
@@ -198,8 +201,9 @@ void Paint::pill(const Rect &r, const std::string &name, const std::string &labe
     }
     else if (kind == PillKind::selected)
     {
-        fill = tone::accent;
-        ink = icon_colour = tone::accent_ink;
+        // Quiet, so the focus ring is the one loud thing: selected isn't where you are.
+        fill = tone::accent.with_alpha(0.2f);
+        ink = icon_colour = tone::accent;
     }
     if (disabled)
         list.push_opacity(0.45f);
@@ -223,6 +227,25 @@ void Paint::pill(const Rect &r, const std::string &name, const std::string &labe
         list.pop_opacity();
     if (focused)
         focus(r, r.h / 2);
+}
+void Paint::slider(const Rect &r, float fraction, bool focused, Color fill, Color end) const
+{
+    constexpr float kTrack = 14;
+    const Rect track{r.x, r.cy() - kTrack / 2, r.w, kTrack};
+    const float x = r.x + r.w * std::clamp(fraction, 0.0f, 1.0f);
+    if (end.a > 0)
+        list.gradient_rect_h(track, kTrack / 2, fill, end);
+    else
+    {
+        list.rounded_rect(track, kTrack / 2, tone::raised2);
+        list.rounded_rect({track.x, track.y, x - track.x, track.h}, kTrack / 2, fill);
+    }
+    const float thumb = focused ? 26 : 20;
+    list.shadow({x - thumb, r.cy() - thumb, 2 * thumb, 2 * thumb}, thumb, 14,
+                Color::rgb(0x000000, 0.5f));
+    list.circle(x, r.cy(), thumb, tone::text);
+    if (focused)
+        list.ring(x, r.cy(), thumb + 10, 5, tone::accent);
 }
 void Paint::live_dot(float cx, float cy, float d) const
 {

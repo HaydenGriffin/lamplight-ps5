@@ -1,12 +1,16 @@
 # Lamplight for PS5 in Home Assistant: a package (put it in <config>/packages/ with `homeassistant: packages:` set up,
-# then reload templates and scripts). Lamplight's payload on the PS5 (README, "Notifications on the PS5") sends the
-# event lamplight_ps5_status once a minute and shows lamplight_ps5_notify as a PS5 notification.
+# then restart, or reload templates, scripts and customisations). Lamplight's payload on the PS5 (README,
+# "The PS5 in Home Assistant") sends the event lamplight_ps5_status once a minute and when the game in front changes,
+# shows lamplight_ps5_notify as a PS5 notification, and takes lamplight_ps5_command.
 #
 #   action: script.ps5_notify
 #   data: {title: Washing machine finished, message: Laundry}
 #
+#   action: script.ps5_launch
+#   data: {title_id: PPSA07923}
+#
 # The payload's token must be an administrator's: Home Assistant lets only administrators subscribe to an event of
-# their own (the notifications) and fire one (the status).
+# their own (the notifications and commands) and fire one (the status).
 
 template:
 - trigger:
@@ -18,7 +22,19 @@ template:
     device_class: connectivity
     state: "true"
     auto_off: "00:03:00"          # off three minutes after the last report: rest mode, off, or the payload stopped
+  - name: PS5 playing
+    unique_id: ps5_playing
+    icon: mdi:sony-playstation
+    # A game or an app in front, other than Lamplight itself.
+    state: "{{ (trigger.event.data.game.title_id | default('')) not in ['', 'PPSA99484'] }}"
+    auto_off: "00:03:00"
   sensor:
+  - name: PS5 game
+    unique_id: ps5_game
+    icon: mdi:gamepad-variant-outline
+    state: "{{ trigger.event.data.game.name | default('Nothing', true) }}"
+    attributes:
+      title_id: "{{ trigger.event.data.game.title_id | default(none) }}"
   - name: PS5 SoC temperature
     unique_id: ps5_soc_temperature
     device_class: temperature
@@ -43,6 +59,34 @@ template:
     state: >-
       {% set up = trigger.event.data.uptime_s | int(-1) %}{{ (now() - timedelta(seconds=up)).replace(second=0,
       microsecond=0).isoformat() if up >= 0 else none }}
+# Lamplight's settings from Home Assistant: the app watches sensor.lamplight_ps5 and applies its "lamplight" attribute
+# over its own settings whenever it changes (the address and token always stay the PS5's). Every key is optional and
+# has the shape lamplight.conf.example shows; edit it here and reload templates.
+- sensor:
+  - name: Lamplight PS5
+    unique_id: lamplight_ps5_settings
+    icon: mdi:sony-playstation
+    state: ready
+    attributes:
+      lamplight: >-
+        {{ {
+          'rooms': [
+            {'name': 'Living room', 'icon': 'mdi:sofa-outline', 'media': 'media_player.living_room_speaker',
+             'tiles': [
+               {'entity': 'light.living_room', 'name': 'Main lights', 'icon': 'mdi:ceiling-light'},
+               {'entity': 'climate.living_room', 'name': 'Radiator'}],
+             'actions': [
+               {'entity': 'script.movie_time', 'name': 'Movie time', 'icon': 'mdi:movie-open-outline'},
+               {'entity': 'script.good_night', 'name': 'Good night', 'icon': 'mdi:power-sleep', 'confirm': true}]}
+          ],
+          'clock': 'auto'
+        } }}
+        {#- Also: 'notices': {'entity': 'sensor.my_notices', 'dismiss_event': 'my_notice_dismiss'},
+            'doorbell': {'trigger': 'binary_sensor.front_door_ding', 'camera': 'camera.front_door'},
+            'photos': 'media-source://media_source/local/photos', 'photo_seconds': 60, 'background': 'photos',
+            'pipeline': '<pipeline id>',
+            A room's 'light' and 'scenes', a tile's 'sensor' and 'boosts', 'house' and 'speakers':
+            lamplight.conf.example shows each. -#}
 
 script:
   ps5_notify:
@@ -60,3 +104,32 @@ script:
         event_data:
           title: "{{ title }}"
           message: "{{ message | default('') }}"
+  ps5_launch:
+    alias: PS5 — open a game or app
+    mode: single
+    fields:
+      title_id: {required: true, example: PPSA07923, selector: {text: null}}
+    sequence:
+      - condition: state
+        entity_id: binary_sensor.ps5_lamplight
+        state: "on"
+      - event: lamplight_ps5_command
+        event_data: {command: launch, title_id: "{{ title_id }}"}
+  ps5_open_lamplight:
+    alias: PS5 — open Lamplight
+    mode: single
+    sequence:
+      - condition: state
+        entity_id: binary_sensor.ps5_lamplight
+        state: "on"
+      - event: lamplight_ps5_command
+        event_data: {command: lamplight}
+  ps5_rest:
+    alias: PS5 — rest mode
+    mode: single
+    sequence:
+      - condition: state
+        entity_id: binary_sensor.ps5_lamplight
+        state: "on"
+      - event: lamplight_ps5_command
+        event_data: {command: rest}

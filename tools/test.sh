@@ -10,7 +10,7 @@ source tools/ninja-build.sh
 cxx=$(command -v "${HOST_CXX:-clang++}")
 cc=$(command -v "${HOST_CC:-clang}")
 ninja_begin "$root/build/tests/build.ninja"
-sources=(src/lamplight/*.cpp src/afterglow/ma_socket.cpp src/afterglow/artwork_fetch.cpp src/third_party/stb_image.cpp src/core/input.cpp src/core/save_file.cpp src/platform/ps5/keyboard.cpp host/platform_host.cpp src/gfx/font.cpp src/gfx/draw_list.cpp src/gfx/triangulate.cpp src/ui/theme.cpp src/ui/widgets.cpp src/ui/pixel_font.cpp src/ui/glyphs.cpp src/ui/components/component.cpp src/ui/components/list.cpp tests/tests.cpp)
+sources=(src/lamplight/*.cpp payload/sfo.cpp src/afterglow/ma_socket.cpp src/afterglow/artwork_fetch.cpp src/third_party/stb_image.cpp src/core/input.cpp src/core/save_file.cpp src/platform/ps5/keyboard.cpp host/platform_host.cpp src/gfx/font.cpp src/gfx/draw_list.cpp src/gfx/triangulate.cpp src/ui/theme.cpp src/ui/widgets.cpp src/ui/pixel_font.cpp src/ui/glyphs.cpp src/ui/components/component.cpp src/ui/components/list.cpp tests/tests.cpp)
 objects=()
 for source in "${sources[@]}"; do
   object="$root/build/tests/${source//\//_}.o"

@@ -39,6 +39,11 @@ cellphone qrcode account-group heart-outline airplane soccer star-outline eye-of
 sofa-outline ceiling-light floor-lamp lamp lightbulb-outline lightbulb-off-outline movie-open-outline
 gamepad-variant-outline power-sleep pause skip-next speaker radiator fireplace bell-ring-outline door-open
 fan blinds television-play music-note-off
+microphone skip-previous volume-high volume-low volume-off doorbell-video cctv stop image-multiple-outline sony-playstation
+account-multiple bed-outline brightness-7 fire home-export-outline robot-vacuum speaker-multiple timer-off-outline
+arrow-collapse-down radiator-off toggle-switch-outline
+silverware-fork-knife lamp-outline floor-lamp-outline ceiling-light-outline lightbulb-group-outline desk-lamp desk
+bed kettle-outline pot-steam-outline heating-coil spray
 """.split()
 UPM = 1200
 SCALE = UPM / 24

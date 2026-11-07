@@ -27,7 +27,7 @@ bool parse_days(const Json &response, const std::string &entity, const Zone &zon
                 std::vector<Day> &out);
 // The next twelve hours from now (an hour that began up to half an hour ago counts).
 std::vector<Hour> next_hours(const std::vector<Hour> &hours, std::int64_t now_ms);
-const char *condition_icon(const std::string &condition);
+const char *condition_icon(const std::string &condition, bool night = false);
 std::string condition_label(const std::string &condition);
 const char *compass(double degrees);
 enum class Sky

@@ -131,6 +131,13 @@ void DrawList::gradient_rect_h(const Rect &r, float radius, Color left, Color ri
     instances_.back().extra[1] = 1.0f; // the shader blends along x instead of y
 }
 
+void DrawList::corner_glow(const Rect &r, float radius, float reach, Color color)
+{
+    gradient_rect(r, radius, color, color.with_alpha(0.0f));
+    instances_.back().extra[1] = 2.0f; // the shader blends by distance from the corner
+    instances_.back().extra[2] = reach * transform_.scale;
+}
+
 void DrawList::chamfer_rect(const Rect &r, float cut, Color fill, float border, Color border_color)
 {
     Instance &i = append(0);
