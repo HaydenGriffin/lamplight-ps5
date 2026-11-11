@@ -30,3 +30,4 @@ jobs:
             dist/lamplight-notify.elf
             build/preview/*.png
           if-no-files-found: error
+          retention-days: 14
